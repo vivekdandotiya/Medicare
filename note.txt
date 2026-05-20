@@ -1,0 +1,121 @@
+========================================================================
+                      MEDICARE - ONLINE MEDICAL STORE
+                       DEVELOPER LOGIC & PAGE NOTES
+========================================================================
+
+This file details the core programming logic, architectural patterns, role divisions,
+and page definitions within the Medicare online medical application.
+
+------------------------------------------------------------------------
+1. ARCHITECTURE & TECH STACK
+------------------------------------------------------------------------
+- Backend Framework: Laravel 11.x (PHP 8.2+)
+- Frontend Engine: Tailwind CSS (compiled via Vite) & Alpine.js for interactions
+- Database: MySQL/MariaDB
+- Authorization Management: Spatie Laravel-Permission (Role-Based Access Control)
+
+------------------------------------------------------------------------
+2. ROLE SEGREGATION & DASHBOARD LOGIC (EXAMPLE CASE)
+------------------------------------------------------------------------
+Medicare separates actions and menus using three main roles: Admin, Staff, and Customer.
+
+* How Roles are Assigned:
+  - Location: register.blade.php & RegisteredUserController.php
+  - Mechanism: During registration, the user selects a role from a dropdown. The 
+    controller validates the input and calls `$user->assignRole($request->role)`.
+
+* How the Dashboard Changes by Role:
+  - Location: dashboard.blade.php (Customer) & medicines.blade.php (Staff/Admin)
+  - Admin/Staff: Redirected or presented with full inventory control tables, 
+    categories lists, sales statistics, and verification actions.
+  - Customer: Presented with a premium Truemeds-inspired layout showcasing medical 
+    banners, hotlines, product searches, testimonials, and personal stats (items in 
+    cart, total spent, order history).
+  - Code Implementation: 
+    Using Blade directives:
+      @role('customer') -> Show Customer view, cart totals, and personal stats.
+      @hasanyrole('admin|staff') -> Show inventory lists, category edits, and approval forms.
+
+------------------------------------------------------------------------
+3. SHOPPING CART & SAVINGS COMPUTATION LOGIC
+------------------------------------------------------------------------
+* Database Level:
+  - 'carts' table records user ownership.
+  - 'cart_items' table tracks medicine links, purchase quantities, and prices.
+* Totals & Savings Calculations:
+  - Location: Cart.php & CartController.php
+  - Savings Logic: Medicines contain a retail price and an optional comparative price. 
+    The system calculates savings as:
+      Savings = (Comparative Price - Retail Price) * Quantity
+    This total comparative savings is shown prominently at checkout to motivate users.
+
+------------------------------------------------------------------------
+4. CLINICAL PRESCRIPTION VERIFICATION LOGIC
+------------------------------------------------------------------------
+* Patient Portal (prescriptions/index.blade.php):
+  - Patient fills details and uploads a file (PDF/Image) to 'uploads/prescriptions/'.
+  - A database record is saved in 'prescriptions' with a 'pending' status marker.
+* Pharmacist Console (prescriptions/admin_index.blade.php):
+  - Staff/Admins see a notification badge count of pending review requests in the navigation bar.
+  - Staff reviews the uploaded script, modifies status to 'approved' or 'rejected', and 
+    writes review notes.
+  - The status is dynamically displayed back to the customer.
+
+------------------------------------------------------------------------
+5. MASTER VIEW DIRECTORY & SYSTEM PAGES
+------------------------------------------------------------------------
+Total Views: 15 pages
+
+1. Public Storefront (welcome.blade.php)
+   - What it does: Primary public landing page before logging in. Displays categories, 
+     brands, featured medicines, search bar, and auth links.
+     
+2. Main User Dashboard (dashboard.blade.php)
+   - What it does: Main customer workspace containing Truemeds layout, search block, 
+     promo banners, call hotline, client reviews, FAQ accordions, and statistics.
+
+3. Login Page (auth/login.blade.php)
+   - What it does: Glassmorphic user login interface with clean styling.
+
+4. Registration Page (auth/register.blade.php)
+   - What it does: Registers new users with Role selection (Customer, Staff, Admin).
+
+5. User Profile (profile/edit.blade.php)
+   - What it does: Lets users update account details, passwords, and delete accounts.
+
+6. Medicine Inventory Grid (medicines/index.blade.php)
+   - What it does: For Customers: Product catalog search and add-to-cart shelf.
+     For Staff/Admins: Clean management table with edit/delete buttons.
+
+7. Create Medicine Form (medicines/create.blade.php)
+   - What it does: Staff/Admin form to add new medicines with images, price, stock, 
+     generic salt name, prescription requirements, and status.
+
+8. Edit Medicine Form (medicines/edit.blade.php)
+   - What it does: Staff/Admin form to modify existing medicine information.
+
+9. Medicine Detail View (medicines/show.blade.php)
+   - What it does: Customer page detailing a single medicine, dosage info, and safety notes.
+
+10. Categories Listing (categories/index.blade.php)
+    - What it does: Staff/Admin view of active category classifications (e.g. Tablets).
+
+11. Brands Listing (brands/index.blade.php)
+    - What it does: Staff/Admin view of pharmaceutical manufacturers (e.g. Abbott).
+
+12. Shopping Cart (cart/index.blade.php)
+    - What it does: Customer shopping cart containing order breakdowns, saving summaries, 
+      and the checkout redirection link.
+
+13. Checkout View (orders/checkout.blade.php)
+    - What it does: Billing information inputs, optional prescription upload field, and 
+      final order submission triggers.
+
+14. Order History Queue (orders/index.blade.php)
+    - What it does: For Customers: Personal order history tracking.
+      For Staff/Admins: Master sales log with order status modifications (Pending, Shipped, Delivered).
+
+15. Prescription Verification Hub (prescriptions/index.blade.php & admin_index.blade.php)
+    - What it does: Handled as dual role pages: Patient upload log on one side, and 
+      pharmacist validation dashboard on the other.
+========================================================================
