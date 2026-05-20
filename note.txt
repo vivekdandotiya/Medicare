@@ -1,121 +1,157 @@
 ========================================================================
                       MEDICARE - ONLINE MEDICAL STORE
-                       DEVELOPER LOGIC & PAGE NOTES
+                      DEVELOPER CORE LOGIC REFERENCE
 ========================================================================
 
-This file details the core programming logic, architectural patterns, role divisions,
-and page definitions within the Medicare online medical application.
+This file documents the core logic implementations, verification rules, 
+and database handling patterns within the Medicare system.
 
 ------------------------------------------------------------------------
-1. ARCHITECTURE & TECH STACK
+1. USER ROLE SEGREGATION & CONTROLS
 ------------------------------------------------------------------------
-- Backend Framework: Laravel 11.x (PHP 8.2+)
-- Frontend Engine: Tailwind CSS (compiled via Vite) & Alpine.js for interactions
-- Database: MySQL/MariaDB
-- Authorization Management: Spatie Laravel-Permission (Role-Based Access Control)
+Medicare enforces three primary roles: 'admin', 'staff', and 'customer'.
 
-------------------------------------------------------------------------
-2. ROLE SEGREGATION & DASHBOARD LOGIC (EXAMPLE CASE)
-------------------------------------------------------------------------
-Medicare separates actions and menus using three main roles: Admin, Staff, and Customer.
+* Seeding & Initialization:
+  - File: `database/seeders/RoleSeeder.php`
+  - Logic: Defines and registers roles into the database using Spatie Laravel-Permission:
+    ```php
+    Role::firstOrCreate(['name' => 'admin']);
+    Role::firstOrCreate(['name' => 'staff']);
+    Role::firstOrCreate(['name' => 'customer']);
+    ```
 
-* How Roles are Assigned:
-  - Location: register.blade.php & RegisteredUserController.php
-  - Mechanism: During registration, the user selects a role from a dropdown. The 
-    controller validates the input and calls `$user->assignRole($request->role)`.
+* Assignment:
+  - File: `app/Http/Controllers/Auth/RegisteredUserController.php`
+  - Logic: Assigns the chosen role to the user record immediately after creation:
+    ```php
+    $user->assignRole($request->role);
+    ```
 
-* How the Dashboard Changes by Role:
-  - Location: dashboard.blade.php (Customer) & medicines.blade.php (Staff/Admin)
-  - Admin/Staff: Redirected or presented with full inventory control tables, 
-    categories lists, sales statistics, and verification actions.
-  - Customer: Presented with a premium Truemeds-inspired layout showcasing medical 
-    banners, hotlines, product searches, testimonials, and personal stats (items in 
-    cart, total spent, order history).
-  - Code Implementation: 
-    Using Blade directives:
-      @role('customer') -> Show Customer view, cart totals, and personal stats.
-      @hasanyrole('admin|staff') -> Show inventory lists, category edits, and approval forms.
-
-------------------------------------------------------------------------
-3. SHOPPING CART & SAVINGS COMPUTATION LOGIC
-------------------------------------------------------------------------
-* Database Level:
-  - 'carts' table records user ownership.
-  - 'cart_items' table tracks medicine links, purchase quantities, and prices.
-* Totals & Savings Calculations:
-  - Location: Cart.php & CartController.php
-  - Savings Logic: Medicines contain a retail price and an optional comparative price. 
-    The system calculates savings as:
-      Savings = (Comparative Price - Retail Price) * Quantity
-    This total comparative savings is shown prominently at checkout to motivate users.
+* Blade & Router Access Controls:
+  - Blade Directives:
+    `@role('customer')` -> Restricts views to customers (e.g. promo banners, personal stats).
+    `@hasanyrole('admin|staff')` -> Reveals management actions (e.g. categories, order status, inventory table).
+  - Controller Abort Safeguard:
+    ```php
+    if (!$user->hasRole('admin') && !$user->hasRole('staff')) {
+        abort(403, 'Unauthorized action.');
+    }
+    ```
 
 ------------------------------------------------------------------------
-4. CLINICAL PRESCRIPTION VERIFICATION LOGIC
+2. REGISTRATION ACCESS CODE VERIFICATION
 ------------------------------------------------------------------------
-* Patient Portal (prescriptions/index.blade.php):
-  - Patient fills details and uploads a file (PDF/Image) to 'uploads/prescriptions/'.
-  - A database record is saved in 'prescriptions' with a 'pending' status marker.
-* Pharmacist Console (prescriptions/admin_index.blade.php):
-  - Staff/Admins see a notification badge count of pending review requests in the navigation bar.
-  - Staff reviews the uploaded script, modifies status to 'approved' or 'rejected', and 
-    writes review notes.
-  - The status is dynamically displayed back to the customer.
+When registering, users selecting staff or admin roles must input a secure verification code to prevent unauthorized elevated privileges.
+
+* Frontend (Dynamic Alpine.js inputs):
+  - File: `resources/views/auth/register.blade.php`
+  - Logic: Uses an Alpine.js model `role` to conditionally display the input field and toggle its `required` state dynamically.
+    - Admin field label: "Company Admin Code"
+    - Staff field label: "Staff Access Code"
+    - Customers: Hidden field; no code required.
+
+* Backend Validation:
+  - File: `app/Http/Controllers/Auth/RegisteredUserController.php`
+  - Logic: Validates codes conditionally and triggers validation exceptions for errors:
+    ```php
+    if (in_array($request->role, ['admin', 'staff'])) {
+        $rules['access_code'] = ['required', 'string'];
+    }
+    $request->validate($rules);
+
+    if ($request->role === 'admin' && $request->access_code !== '123') {
+        throw ValidationException::withMessages(['access_code' => 'The provided company admin code is incorrect.']);
+    }
+    if ($request->role === 'staff' && $request->access_code !== '1234') {
+        throw ValidationException::withMessages(['access_code' => 'The provided staff access code is incorrect.']);
+    }
+    ```
 
 ------------------------------------------------------------------------
-5. MASTER VIEW DIRECTORY & SYSTEM PAGES
+3. ORDER PLACEMENT, STOCK, & CANCELLATION LOGIC
 ------------------------------------------------------------------------
-Total Views: 15 pages
+Handles checkout forms, verification of medicine stock, and file uploads for prescription medicines.
 
-1. Public Storefront (welcome.blade.php)
-   - What it does: Primary public landing page before logging in. Displays categories, 
-     brands, featured medicines, search bar, and auth links.
-     
-2. Main User Dashboard (dashboard.blade.php)
-   - What it does: Main customer workspace containing Truemeds layout, search block, 
-     promo banners, call hotline, client reviews, FAQ accordions, and statistics.
+* Checkout & Prescription Detection:
+  - File: `app/Http/Controllers/OrderController.php` (checkout & store)
+  - Logic: Verifies if any item in the cart is flagged with `prescription_required = true`:
+    ```php
+    $prescriptionRequired = $cart->items->contains(function ($item) {
+        return $item->medicine->prescription_required;
+    });
+    ```
+    If true, the checkout page requires a file upload, and validation enforces it:
+    ```php
+    if ($prescriptionRequired) {
+        $rules['prescription'] = 'required|file|mimes:jpeg,png,jpg,pdf|max:2048';
+    }
+    ```
 
-3. Login Page (auth/login.blade.php)
-   - What it does: Glassmorphic user login interface with clean styling.
+* Stock Verification & Deduction:
+  - File: `app/Http/Controllers/OrderController.php` (store)
+  - Logic: Prevents checkout if a medicine's stock is insufficient:
+    ```php
+    foreach ($cart->items as $item) {
+        if ($item->medicine->stock_quantity < $item->quantity) {
+            return redirect()->route('cart.index')->with('error', 'Out of stock error...');
+        }
+    }
+    ```
+    Upon success, decrements inventory stock:
+    ```php
+    $item->medicine->decrement('stock_quantity', $item->quantity);
+    ```
 
-4. Registration Page (auth/register.blade.php)
-   - What it does: Registers new users with Role selection (Customer, Staff, Admin).
+* Order Cancellation (Restocking):
+  - File: `app/Http/Controllers/OrderController.php` (updateStatus)
+  - Logic: If an admin or staff member changes an order's status to 'cancelled', the inventory stock is returned:
+    ```php
+    if ($request->status === 'cancelled' && $order->status !== 'cancelled') {
+        foreach ($order->items as $item) {
+            $item->medicine->increment('stock_quantity', $item->quantity);
+        }
+    }
+    ```
 
-5. User Profile (profile/edit.blade.php)
-   - What it does: Lets users update account details, passwords, and delete accounts.
+------------------------------------------------------------------------
+4. SHOPPING CART & SAVINGS COMPUTATION
+------------------------------------------------------------------------
+Cart calculations evaluate comparative pricing values to represent user savings.
 
-6. Medicine Inventory Grid (medicines/index.blade.php)
-   - What it does: For Customers: Product catalog search and add-to-cart shelf.
-     For Staff/Admins: Clean management table with edit/delete buttons.
+* Model Computations:
+  - File: `app/Models/Cart.php`
+  - Logic: Automatically calculates cost differences through Eloquent attributes:
+    ```php
+    // Subtotal at retail selling price
+    public function getSubtotalAttribute() {
+        return $this->items->sum(fn($item) => $item->quantity * $item->medicine->selling_price);
+    }
+    // Subtotal at MRP (Manufacturer Retail Price)
+    public function getMrpSubtotalAttribute() {
+        return $this->items->sum(fn($item) => $item->quantity * $item->medicine->mrp);
+    }
+    // Combined savings
+    public function getSavingsAttribute() {
+        return $this->mrp_subtotal - $this->subtotal;
+    }
+    ```
 
-7. Create Medicine Form (medicines/create.blade.php)
-   - What it does: Staff/Admin form to add new medicines with images, price, stock, 
-     generic salt name, prescription requirements, and status.
+------------------------------------------------------------------------
+5. CLINICAL PRESCRIPTION REVIEW FLOW
+------------------------------------------------------------------------
+Patients can upload clinical scripts, which admins or pharmacists must verify.
 
-8. Edit Medicine Form (medicines/edit.blade.php)
-   - What it does: Staff/Admin form to modify existing medicine information.
+* Patient Upload:
+  - File: `app/Http/Controllers/PrescriptionController.php` (store)
+  - Logic: Moves file uploads to `public/uploads/prescriptions/` and saves a record set as `'pending'`.
 
-9. Medicine Detail View (medicines/show.blade.php)
-   - What it does: Customer page detailing a single medicine, dosage info, and safety notes.
-
-10. Categories Listing (categories/index.blade.php)
-    - What it does: Staff/Admin view of active category classifications (e.g. Tablets).
-
-11. Brands Listing (brands/index.blade.php)
-    - What it does: Staff/Admin view of pharmaceutical manufacturers (e.g. Abbott).
-
-12. Shopping Cart (cart/index.blade.php)
-    - What it does: Customer shopping cart containing order breakdowns, saving summaries, 
-      and the checkout redirection link.
-
-13. Checkout View (orders/checkout.blade.php)
-    - What it does: Billing information inputs, optional prescription upload field, and 
-      final order submission triggers.
-
-14. Order History Queue (orders/index.blade.php)
-    - What it does: For Customers: Personal order history tracking.
-      For Staff/Admins: Master sales log with order status modifications (Pending, Shipped, Delivered).
-
-15. Prescription Verification Hub (prescriptions/index.blade.php & admin_index.blade.php)
-    - What it does: Handled as dual role pages: Patient upload log on one side, and 
-      pharmacist validation dashboard on the other.
+* Staff/Admin Review:
+  - File: `app/Http/Controllers/PrescriptionController.php` (update)
+  - Logic: Allows staff and admins to change the review status to `'approved'` or `'rejected'` and insert notes:
+    ```php
+    $prescription->update([
+        'status' => $request->status,
+        'notes' => $request->notes,
+    ]);
+    ```
 ========================================================================
