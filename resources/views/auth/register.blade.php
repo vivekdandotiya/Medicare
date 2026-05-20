@@ -4,7 +4,7 @@
         <p class="text-sm text-gray-500 mt-1">Join Medicare to manage prescriptions & orders</p>
     </div>
 
-    <form method="POST" action="{{ route('register') }}" class="space-y-4">
+    <form method="POST" action="{{ route('register') }}" class="space-y-4" x-data="{ role: '{{ old('role', 'customer') }}' }">
         @csrf
 
         <!-- Name -->
@@ -46,7 +46,7 @@
         <!-- Register As (Role) -->
         <div>
             <label for="role" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Account Type / Register As</label>
-            <select id="role" name="role" 
+            <select id="role" name="role" x-model="role"
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-teal-500 focus:ring-teal-500 bg-gray-50 font-medium text-gray-700" 
                     required>
                 <option value="customer" {{ old('role') == 'customer' ? 'selected' : '' }}>Customer (Buy Medicines)</option>
@@ -54,6 +54,18 @@
                 <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin (Full Control)</option>
             </select>
             <x-input-error :messages="$errors->get('role')" class="mt-1" />
+        </div>
+
+        <!-- Admin / Staff Access Code -->
+        <div x-show="role === 'admin' || role === 'staff'" x-transition class="mt-4">
+            <label for="access_code" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                <span x-text="role === 'admin' ? 'Company Admin Code' : 'Staff Access Code'">Access Code</span>
+            </label>
+            <input id="access_code" type="password" name="access_code" 
+                   class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-teal-500 focus:ring-teal-500 bg-gray-50"
+                   x-bind:required="role === 'admin' || role === 'staff'"
+                   placeholder="Enter code to verify your role">
+            <x-input-error :messages="$errors->get('access_code')" class="mt-1" />
         </div>
 
         <!-- Submit Button -->

@@ -30,12 +30,30 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'string', 'in:customer,staff,admin'],
-        ]);
+        ];
+
+        if (in_array($request->role, ['admin', 'staff'])) {
+            $rules['access_code'] = ['required', 'string'];
+        }
+
+        $request->validate($rules);
+
+        if ($request->role === 'admin' && $request->access_code !== '123') {
+            throw ValidationException::withMessages([
+                'access_code' => 'The provided company admin code is incorrect.',
+            ]);
+        }
+
+        if ($request->role === 'staff' && $request->access_code !== '1234') {
+            throw ValidationException::withMessages([
+                'access_code' => 'The provided staff access code is incorrect.',
+            ]);
+        }
 
         $user = User::create([
             'name' => $request->name,

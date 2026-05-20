@@ -14,8 +14,11 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased bg-gradient-to-tr from-teal-900 via-teal-800 to-emerald-900 min-h-screen flex items-center justify-center py-10 px-4">
-        <div class="w-full max-w-md flex flex-col items-center">
+    <body class="font-sans text-gray-900 antialiased min-h-screen flex items-center justify-center py-10 px-4 relative bg-cover bg-center bg-no-repeat" style="background-image: url('{{ asset('images/medical_background.png') }}');">
+        <!-- Background Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-tr from-teal-950/80 via-teal-900/70 to-emerald-950/80 backdrop-blur-[3px]"></div>
+
+        <div class="w-full max-w-md flex flex-col items-center relative z-10">
             
             <!-- Logo Section -->
             <div class="mb-8 flex flex-col items-center">
