@@ -7,6 +7,10 @@
             $lowStock = \App\Models\Medicine::where('stock_quantity', '<=', 5)->count();
             $pendingOrders = \App\Models\Order::whereIn('status', ['pending', 'processing'])->count();
             $revenue = \App\Models\Order::where('status', 'delivered')->sum('total_amount');
+            
+            // Add dashboard queues
+            $recentOrders = \App\Models\Order::with('user')->orderBy('created_at', 'desc')->take(5)->get();
+            $lowStockMedicines = \App\Models\Medicine::with('brand')->where('stock_quantity', '<=', 5)->orderBy('stock_quantity', 'asc')->take(5)->get();
         } else {
             $cart = \App\Models\Cart::where('user_id', $user->id)->first();
             $cartCount = $cart ? $cart->items()->sum('quantity') : 0;
@@ -53,7 +57,7 @@
             
             @if($user->hasRole('admin') || $user->hasRole('staff'))
                 <!-- ================= ADMIN / STAFF SYSTEM ================= -->
-                <div class="bg-gradient-to-r from-teal-850 to-emerald-950 rounded-3xl p-8 md:p-10 text-white shadow-2xl relative overflow-hidden">
+                <div class="bg-gradient-to-r from-teal-900 to-emerald-900 rounded-3xl p-8 md:p-10 text-white shadow-2xl relative overflow-hidden">
                     <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-teal-500 rounded-full filter blur-3xl opacity-20"></div>
                     <span class="inline-flex items-center gap-1.5 bg-teal-500/25 text-teal-200 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border border-teal-500/20">
                         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -72,13 +76,13 @@
                             </svg>
                         </div>
                         <div>
-                            <span class="text-[10px] font-bold text-gray-405 uppercase tracking-widest block">Total Medicines</span>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Total Medicines</span>
                             <span class="text-3xl font-black text-slate-850 block mt-0.5">{{ $totalMedicines }}</span>
                         </div>
                     </div>
 
                     <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-5">
-                        <div class="p-4 bg-red-500/10 text-red-650 rounded-2xl">
+                        <div class="p-4 bg-red-500/10 text-red-600 rounded-2xl">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
@@ -145,6 +149,84 @@
                         <h3 class="font-extrabold text-gray-900 text-lg group-hover:text-teal-700 transition">Taxonomy Structure</h3>
                         <p class="text-xs text-gray-500 mt-2 font-medium leading-relaxed">Create brand labels, configure therapy categories, and structure web navigation tags.</p>
                     </a>
+                </div>
+
+                <!-- Recent Activity & Stock Warnings Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Left: Recent Customer Orders (7 Columns) -->
+                    <div class="lg:col-span-7 bg-white rounded-3xl p-6 border border-slate-150 shadow-sm space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-extrabold text-slate-800 text-lg tracking-tight">Recent Customer Orders</h3>
+                            <a href="{{ route('orders.index') }}" class="text-xs font-bold text-teal-600 hover:text-teal-800 transition">Manage Orders &rarr;</a>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider">
+                                        <th class="pb-3">Order ID</th>
+                                        <th class="pb-3">Customer</th>
+                                        <th class="pb-3">Status</th>
+                                        <th class="pb-3 text-right">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50 text-slate-700 font-medium">
+                                    @forelse($recentOrders as $order)
+                                        <tr>
+                                            <td class="py-3.5 font-bold text-slate-800">#{{ $order->id }}</td>
+                                            <td class="py-3.5">{{ $order->user->name }}</td>
+                                            <td class="py-3.5">
+                                                @if($order->status === 'pending')
+                                                    <span class="bg-amber-100 text-amber-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-amber-150">Pending</span>
+                                                @elseif($order->status === 'processing')
+                                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-blue-150">Processing</span>
+                                                @elseif($order->status === 'shipped')
+                                                    <span class="bg-indigo-100 text-indigo-705 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-indigo-150">Shipped</span>
+                                                @elseif($order->status === 'delivered')
+                                                    <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-150">Delivered</span>
+                                                @else
+                                                    <span class="bg-red-100 text-red-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-red-150">Cancelled</span>
+                                                @endif
+                                            </td>
+                                            <td class="py-3.5 text-right font-black text-slate-900">₹{{ number_format($order->total_amount, 2) }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="4" class="py-6 text-center text-slate-450 font-semibold">No recent orders placed.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right: Low Stock Warnings (5 Columns) -->
+                    <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-slate-150 shadow-sm space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-extrabold text-slate-800 text-lg tracking-tight">Stock Warning Logs</h3>
+                            <a href="{{ route('medicines.index') }}" class="text-xs font-bold text-teal-650 hover:text-teal-850 transition">Restock Items &rarr;</a>
+                        </div>
+
+                        <div class="space-y-4">
+                            @forelse($lowStockMedicines as $medicine)
+                                <div class="flex justify-between items-center bg-slate-50/50 p-3.5 rounded-2xl border border-slate-100">
+                                    <div>
+                                        <span class="font-bold text-slate-800 text-xs block">{{ $medicine->name }}</span>
+                                        <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider block mt-0.5">{{ $medicine->brand->name }}</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="bg-red-100 text-red-700 text-[10px] font-black px-2.5 py-1 rounded-full border border-red-200 block">
+                                            {{ $medicine->stock_quantity }} left
+                                        </span>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="py-6 text-center text-slate-450 font-semibold text-xs">
+                                    All medicine stocks are at safe levels.
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
                 </div>
 
             @else
