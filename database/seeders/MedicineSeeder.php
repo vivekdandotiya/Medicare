@@ -220,6 +220,78 @@ class MedicineSeeder extends Seeder
                 'prescription_required' => false,
                 'image' => 'uploads/medicines/dolo_650_tablet.png',
                 'status' => true
+            ],
+            [
+                'name' => 'Himalaya Koflet Cough Syrup 100ml',
+                'category' => 'Ayurverdic & Herbal',
+                'brand' => 'Himalaya',
+                'description' => 'Koflet syrup is an ayurvedic proprietary medicine that helps manage both dry and productive coughs.',
+                'mrp' => 115.00,
+                'selling_price' => 99.00,
+                'stock_quantity' => 140,
+                'prescription_required' => false,
+                'image' => 'uploads/medicines/cough_syrup.png',
+                'status' => true
+            ],
+            [
+                'name' => 'Dabur Honitus Herbal Cough Syrup 100ml',
+                'category' => 'Ayurverdic & Herbal',
+                'brand' => 'Dabur',
+                'description' => 'Honitus Cough Syrup is an ayurvedic remedy for fast and effective relief from cough and throat irritation.',
+                'mrp' => 105.00,
+                'selling_price' => 89.00,
+                'stock_quantity' => 160,
+                'prescription_required' => false,
+                'image' => 'uploads/medicines/cough_syrup.png',
+                'status' => true
+            ],
+            [
+                'name' => 'Limcee Vitamin C 500mg Chewable Tablet',
+                'category' => 'Wellness & Fitness',
+                'brand' => 'Cipla',
+                'description' => 'Limcee Chewable Tablets contain Vitamin C (Ascorbic Acid) to help build immunity and treat vitamin deficiencies.',
+                'mrp' => 25.00,
+                'selling_price' => 20.00,
+                'stock_quantity' => 300,
+                'prescription_required' => false,
+                'image' => 'uploads/medicines/dolo_650_tablet.png',
+                'status' => true
+            ],
+            [
+                'name' => 'Zandu Balm Ultra Power 8ml',
+                'category' => 'Ayurverdic & Herbal',
+                'brand' => 'Dabur',
+                'description' => 'Zandu Balm is India\'s No.1 pain relief balm. It provides instant relief from severe headache, body ache and cold.',
+                'mrp' => 45.00,
+                'selling_price' => 38.00,
+                'stock_quantity' => 200,
+                'prescription_required' => false,
+                'image' => 'uploads/medicines/ayurvedic_jar.png',
+                'status' => true
+            ],
+            [
+                'name' => 'Vicks Vaporub 50g',
+                'category' => 'Wellness & Fitness',
+                'brand' => 'GSK',
+                'description' => 'Vicks Vaporub provides relief from cold symptoms like nasal congestion, sore throat, cough, and body ache.',
+                'mrp' => 155.00,
+                'selling_price' => 135.00,
+                'stock_quantity' => 150,
+                'prescription_required' => false,
+                'image' => 'uploads/medicines/ayurvedic_jar.png',
+                'status' => true
+            ],
+            [
+                'name' => 'Strepsils Orange Throat Lozenges',
+                'category' => 'Tablets & Capsules',
+                'brand' => 'GSK',
+                'description' => 'Strepsils Lozenges provide fast, soothing relief from throat irritation and dry cough.',
+                'mrp' => 35.00,
+                'selling_price' => 30.00,
+                'stock_quantity' => 250,
+                'prescription_required' => false,
+                'image' => 'uploads/medicines/dolo_650_tablet.png',
+                'status' => true
             ]
         ];
 
