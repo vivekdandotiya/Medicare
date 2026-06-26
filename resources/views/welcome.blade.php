@@ -290,5 +290,8 @@
                 </div>
             </div>
         </footer>
+
+        <!-- Global Chatbot Widget -->
+        @include('components.chatbot')
     </body>
 </html>

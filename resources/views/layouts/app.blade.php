@@ -41,5 +41,8 @@
                 {{ $slot }}
             </main>
         </div>
+        
+        <!-- Global Chatbot Widget -->
+        @include('components.chatbot')
     </body>
 </html>
