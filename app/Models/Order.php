@@ -14,6 +14,8 @@ class Order extends Model
         'phone',
         'prescription_path',
         'payment_method',
+        'coupon_code',
+        'discount_amount',
     ];
 
     public function user()

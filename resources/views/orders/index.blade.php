@@ -110,6 +110,10 @@
                                     <span><span class="font-semibold text-gray-500">Phone:</span> {{ $order->phone }}</span>
                                     <span><span class="font-semibold text-gray-500">Address:</span> {{ $order->shipping_address }}</span>
                                     <span><span class="font-semibold text-gray-500">Payment:</span> {{ strtoupper($order->payment_method) }}</span>
+                                    @if($order->coupon_code)
+                                        <span class="mt-1 flex items-center gap-1.5"><span class="font-semibold text-teal-600">Coupon:</span> <span class="bg-teal-50 text-teal-700 text-xs px-1.5 py-0.5 rounded font-mono font-bold border border-teal-100">{{ $order->coupon_code }}</span></span>
+                                        <span><span class="font-semibold text-teal-600">Discount:</span> <span class="text-teal-700 font-bold">-₹{{ number_format($order->discount_amount, 2) }}</span></span>
+                                    @endif
                                 </div>
                             </div>
 

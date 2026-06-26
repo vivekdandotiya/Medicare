@@ -59,6 +59,7 @@ class OrderController extends Controller
             'shipping_address' => 'required|string|max:1000',
             'phone' => 'required|string|max:15',
             'payment_method' => 'required|in:cod,online',
+            'coupon_code' => 'nullable|string|max:50',
         ];
 
         if ($prescriptionRequired) {
@@ -83,15 +84,29 @@ class OrderController extends Controller
             $prescriptionPath = 'uploads/prescriptions/' . $filename;
         }
 
+        // Calculate discount and shipping
+        $subtotal = $cart->subtotal;
+        $discount = 0;
+        $couponCode = $request->input('coupon_code');
+        if ($couponCode === '123' || $couponCode === '1234') {
+            $discount = $subtotal * 0.10;
+        }
+
+        $discountedSubtotal = $subtotal - $discount;
+        $shipping = $discountedSubtotal >= 500 ? 0 : 50;
+        $totalAmount = $discountedSubtotal + $shipping;
+
         // Create Order
         $order = Order::create([
             'user_id' => $user->id,
             'status' => 'pending',
-            'total_amount' => $cart->subtotal,
+            'total_amount' => $totalAmount,
             'shipping_address' => $request->shipping_address,
             'phone' => $request->phone,
             'prescription_path' => $prescriptionPath,
             'payment_method' => $request->payment_method,
+            'coupon_code' => $couponCode ?: null,
+            'discount_amount' => $discount,
         ]);
 
         // Create Order Items and decrease stock
