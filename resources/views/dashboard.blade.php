@@ -31,133 +31,133 @@
         .truemeds-card {
             background: #ffffff;
             border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-            border: 1px solid #f1f5f9;
-            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .truemeds-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
-            border-color: #cbd5e1;
+            box-shadow: 0 20px 40px rgba(13, 148, 136, 0.05);
+            border-color: rgba(13, 148, 136, 0.15);
         }
         .search-container {
-            background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%);
+            background: linear-gradient(135deg, #f0fdf4 0%, #f0fdfa 100%);
             border-radius: 32px;
-            padding: 40px 24px;
+            border: 1px solid rgba(13, 148, 136, 0.08);
         }
         .doctor-stripe {
-            background-color: #e6f7f0;
-            border: 1px solid #c2ebd9;
-            border-radius: 20px;
+            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+            border: 1px solid rgba(13, 148, 136, 0.12);
+            border-radius: 24px;
         }
     </style>
 
-    <div class="bg-slate-50 min-h-screen py-10 px-4 sm:px-6 lg:px-8">
+    <div class="bg-slate-50/50 min-h-screen py-10 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto space-y-10">
             
             @if($user->hasRole('admin') || $user->hasRole('staff'))
                 <!-- ================= ADMIN / STAFF SYSTEM ================= -->
-                <div class="bg-gradient-to-r from-teal-900 to-emerald-900 rounded-3xl p-8 md:p-10 text-white shadow-2xl relative overflow-hidden">
-                    <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-teal-500 rounded-full filter blur-3xl opacity-20"></div>
-                    <span class="inline-flex items-center gap-1.5 bg-teal-500/25 text-teal-200 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border border-teal-500/20">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <div class="bg-gradient-to-br from-slate-900 via-teal-950 to-slate-900 rounded-3xl p-8 md:p-10 text-white shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-teal-500/10 rounded-full filter blur-3xl"></div>
+                    <span class="inline-flex items-center gap-1.5 bg-teal-500/20 text-teal-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border border-teal-500/30">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
                         {{ $user->hasRole('admin') ? 'Administrator Access' : 'Store Staff Access' }}
                     </span>
-                    <h1 class="text-3xl md:text-4xl font-black tracking-tight mt-4">Welcome back, {{ $user->name }}!</h1>
-                    <p class="text-teal-100/90 mt-2 text-sm max-w-xl">Medicare's centralized admin suite gives you instant access to stock levels, metrics, and billing operations.</p>
+                    <h1 class="text-3xl md:text-4xl font-extrabold mt-4 tracking-tight">Welcome back, {{ $user->name }}!</h1>
+                    <p class="text-slate-400 mt-2 text-sm max-w-xl font-light">Medicare's centralized admin suite gives you instant access to stock levels, metrics, and billing operations.</p>
                 </div>
 
                 <!-- Admin Statistics Cards -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-5">
-                        <div class="p-4 bg-teal-500/10 text-teal-700 rounded-2xl">
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200/50 shadow-sm flex items-center gap-5">
+                        <div class="p-4 bg-teal-500/10 text-teal-600 rounded-2xl border border-teal-500/10">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 9.172V5L8 4z" />
                             </svg>
                         </div>
                         <div>
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Total Medicines</span>
-                            <span class="text-3xl font-black text-slate-850 block mt-0.5">{{ $totalMedicines }}</span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Total Medicines</span>
+                            <span class="text-3xl font-black text-slate-900 block mt-0.5">{{ $totalMedicines }}</span>
                         </div>
                     </div>
 
-                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-5">
-                        <div class="p-4 bg-red-500/10 text-red-600 rounded-2xl">
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200/50 shadow-sm flex items-center gap-5">
+                        <div class="p-4 bg-red-500/10 text-red-650 rounded-2xl border border-red-500/10">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
                         </div>
                         <div>
-                            <span class="text-[10px] font-bold text-gray-450 uppercase tracking-widest block">Low Stock Alerts</span>
-                            <span class="text-3xl font-black text-slate-850 block mt-0.5">{{ $lowStock }}</span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Low Stock Alerts</span>
+                            <span class="text-3xl font-black text-slate-900 block mt-0.5">{{ $lowStock }}</span>
                         </div>
                     </div>
 
-                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-5">
-                        <div class="p-4 bg-blue-500/10 text-blue-650 rounded-2xl">
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200/50 shadow-sm flex items-center gap-5">
+                        <div class="p-4 bg-indigo-500/10 text-indigo-650 rounded-2xl border border-indigo-500/10">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2" />
                             </svg>
                         </div>
                         <div>
-                            <span class="text-[10px] font-bold text-gray-450 uppercase tracking-widest block">Active Orders</span>
-                            <span class="text-3xl font-black text-slate-850 block mt-0.5">{{ $pendingOrders }}</span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Active Orders</span>
+                            <span class="text-3xl font-black text-slate-900 block mt-0.5">{{ $pendingOrders }}</span>
                         </div>
                     </div>
 
-                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-5">
-                        <div class="p-4 bg-emerald-500/10 text-emerald-650 rounded-2xl">
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200/50 shadow-sm flex items-center gap-5">
+                        <div class="p-4 bg-emerald-500/10 text-emerald-650 rounded-2xl border border-emerald-500/10">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z" />
                             </svg>
                         </div>
                         <div>
-                            <span class="text-[10px] font-bold text-gray-450 uppercase tracking-widest block">Total Revenue</span>
-                            <span class="text-3xl font-black text-slate-850 block mt-0.5">₹{{ number_format($revenue, 2) }}</span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Total Revenue</span>
+                            <span class="text-3xl font-black text-slate-900 block mt-0.5">₹{{ number_format($revenue, 2) }}</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Management Operations -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <a href="{{ route('medicines.index') }}" class="bg-white border border-slate-150 hover:border-teal-500 rounded-3xl p-6 shadow-sm hover:shadow-md transition duration-300 block text-left group">
-                        <div class="w-14 h-14 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center mb-5 group-hover:bg-teal-650 group-hover:text-white transition duration-300 shadow-inner">
+                    <a href="{{ route('medicines.index') }}" class="bg-white border border-slate-200/50 hover:border-teal-500/30 rounded-3xl p-6 shadow-sm hover:shadow-md transition duration-300 block text-left group">
+                        <div class="w-14 h-14 rounded-2xl bg-teal-50 text-teal-650 flex items-center justify-center mb-5 group-hover:bg-gradient-to-br group-hover:from-teal-500 group-hover:to-emerald-600 group-hover:text-white transition duration-300 shadow-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                             </svg>
                         </div>
-                        <h3 class="font-extrabold text-gray-900 text-lg group-hover:text-teal-700 transition">Inventory & Pricing</h3>
-                        <p class="text-xs text-gray-500 mt-2 font-medium leading-relaxed">Update catalogs, adjust markdowns, and monitor inventory warning triggers.</p>
+                        <h3 class="font-bold text-slate-900 text-lg group-hover:text-teal-700 transition">Inventory & Pricing</h3>
+                        <p class="text-xs text-slate-500 mt-2 font-medium leading-relaxed">Update catalogs, adjust markdowns, and monitor inventory warning triggers.</p>
                     </a>
 
-                    <a href="{{ route('orders.index') }}" class="bg-white border border-slate-150 hover:border-teal-500 rounded-3xl p-6 shadow-sm hover:shadow-md transition duration-300 block text-left group">
-                        <div class="w-14 h-14 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center mb-5 group-hover:bg-teal-650 group-hover:text-white transition duration-300 shadow-inner">
+                    <a href="{{ route('orders.index') }}" class="bg-white border border-slate-200/50 hover:border-teal-500/30 rounded-3xl p-6 shadow-sm hover:shadow-md transition duration-300 block text-left group">
+                        <div class="w-14 h-14 rounded-2xl bg-teal-50 text-teal-650 flex items-center justify-center mb-5 group-hover:bg-gradient-to-br group-hover:from-teal-500 group-hover:to-emerald-600 group-hover:text-white transition duration-300 shadow-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2" />
                             </svg>
                         </div>
-                        <h3 class="font-extrabold text-gray-900 text-lg group-hover:text-teal-700 transition">Order Fulfillment</h3>
-                        <p class="text-xs text-gray-500 mt-2 font-medium leading-relaxed">Review doctor prescriptions, assign shipping carriers, and change fulfillment status.</p>
+                        <h3 class="font-bold text-slate-900 text-lg group-hover:text-teal-700 transition">Order Fulfillment</h3>
+                        <p class="text-xs text-slate-500 mt-2 font-medium leading-relaxed">Review doctor prescriptions, assign shipping carriers, and change fulfillment status.</p>
                     </a>
 
-                    <a href="{{ route('categories.index') }}" class="bg-white border border-slate-150 hover:border-teal-500 rounded-3xl p-6 shadow-sm hover:shadow-md transition duration-300 block text-left group">
-                        <div class="w-14 h-14 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center mb-5 group-hover:bg-teal-650 group-hover:text-white transition duration-300 shadow-inner">
+                    <a href="{{ route('categories.index') }}" class="bg-white border border-slate-200/50 hover:border-teal-500/30 rounded-3xl p-6 shadow-sm hover:shadow-md transition duration-300 block text-left group">
+                        <div class="w-14 h-14 rounded-2xl bg-teal-50 text-teal-650 flex items-center justify-center mb-5 group-hover:bg-gradient-to-br group-hover:from-teal-500 group-hover:to-emerald-600 group-hover:text-white transition duration-300 shadow-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
                             </svg>
                         </div>
-                        <h3 class="font-extrabold text-gray-900 text-lg group-hover:text-teal-700 transition">Taxonomy Structure</h3>
-                        <p class="text-xs text-gray-500 mt-2 font-medium leading-relaxed">Create brand labels, configure therapy categories, and structure web navigation tags.</p>
+                        <h3 class="font-bold text-slate-900 text-lg group-hover:text-teal-700 transition">Taxonomy Structure</h3>
+                        <p class="text-xs text-slate-500 mt-2 font-medium leading-relaxed">Create brand labels, configure therapy categories, and structure web navigation tags.</p>
                     </a>
                 </div>
 
                 <!-- Recent Activity & Stock Warnings Grid -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     <!-- Left: Recent Customer Orders (7 Columns) -->
-                    <div class="lg:col-span-7 bg-white rounded-3xl p-6 border border-slate-150 shadow-sm space-y-6">
+                    <div class="lg:col-span-7 bg-white rounded-3xl p-6 border border-slate-200/50 shadow-sm space-y-6">
                         <div class="flex justify-between items-center">
-                            <h3 class="font-extrabold text-slate-800 text-lg tracking-tight">Recent Customer Orders</h3>
-                            <a href="{{ route('orders.index') }}" class="text-xs font-bold text-teal-600 hover:text-teal-800 transition">Manage Orders &rarr;</a>
+                            <h3 class="font-bold text-slate-900 text-lg tracking-tight">Recent Customer Orders</h3>
+                            <a href="{{ route('orders.index') }}" class="text-xs font-bold text-teal-605 hover:text-teal-800 transition">Manage Orders &rarr;</a>
                         </div>
                         
                         <div class="overflow-x-auto">
@@ -172,27 +172,27 @@
                                 </thead>
                                 <tbody class="divide-y divide-slate-50 text-slate-700 font-medium">
                                     @forelse($recentOrders as $order)
-                                        <tr>
+                                        <tr class="hover:bg-slate-50/50 transition">
                                             <td class="py-3.5 font-bold text-slate-800">#{{ $order->id }}</td>
                                             <td class="py-3.5">{{ $order->user->name }}</td>
                                             <td class="py-3.5">
                                                 @if($order->status === 'pending')
-                                                    <span class="bg-amber-100 text-amber-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-amber-150">Pending</span>
+                                                    <span class="bg-amber-500/10 text-amber-700 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Pending</span>
                                                 @elseif($order->status === 'processing')
-                                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-blue-150">Processing</span>
+                                                    <span class="bg-blue-500/10 text-blue-700 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Processing</span>
                                                 @elseif($order->status === 'shipped')
-                                                    <span class="bg-indigo-100 text-indigo-705 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-indigo-150">Shipped</span>
+                                                    <span class="bg-indigo-500/10 text-indigo-705 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Shipped</span>
                                                 @elseif($order->status === 'delivered')
-                                                    <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-150">Delivered</span>
+                                                    <span class="bg-emerald-500/10 text-emerald-705 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Delivered</span>
                                                 @else
-                                                    <span class="bg-red-100 text-red-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-red-150">Cancelled</span>
+                                                    <span class="bg-red-500/10 text-red-700 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Cancelled</span>
                                                 @endif
                                             </td>
-                                            <td class="py-3.5 text-right font-black text-slate-900">₹{{ number_format($order->total_amount, 2) }}</td>
+                                            <td class="py-3.5 text-right font-extrabold text-slate-900">₹{{ number_format($order->total_amount, 2) }}</td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="4" class="py-6 text-center text-slate-450 font-semibold">No recent orders placed.</td>
+                                            <td colspan="4" class="py-6 text-center text-slate-400 font-semibold">No recent orders placed.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -201,28 +201,26 @@
                     </div>
 
                     <!-- Right: Low Stock Warnings (5 Columns) -->
-                    <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-slate-150 shadow-sm space-y-6">
+                    <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-slate-200/50 shadow-sm space-y-6">
                         <div class="flex justify-between items-center">
-                            <h3 class="font-extrabold text-slate-800 text-lg tracking-tight">Stock Warning Logs</h3>
-                            <a href="{{ route('medicines.index') }}" class="text-xs font-bold text-teal-650 hover:text-teal-850 transition">Restock Items &rarr;</a>
+                            <h3 class="font-bold text-slate-900 text-lg tracking-tight">Low Inventory Warnings</h3>
+                            <a href="{{ route('medicines.index') }}" class="text-xs font-bold text-teal-605 hover:text-teal-800 transition">View Catalog &rarr;</a>
                         </div>
-
-                        <div class="space-y-4">
-                            @forelse($lowStockMedicines as $medicine)
-                                <div class="flex justify-between items-center bg-slate-50/50 p-3.5 rounded-2xl border border-slate-100">
-                                    <div>
-                                        <span class="font-bold text-slate-800 text-xs block">{{ $medicine->name }}</span>
-                                        <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider block mt-0.5">{{ $medicine->brand->name }}</span>
+                        
+                        <div class="flex flex-col gap-4">
+                            @forelse($lowStockMedicines as $med)
+                                <div class="flex items-center justify-between border-b border-slate-50 pb-3 last:border-b-0 last:pb-0">
+                                    <div class="truncate flex-1 pr-4">
+                                        <span class="font-bold text-slate-800 text-xs block truncate">{{ $med->name }}</span>
+                                        <span class="text-[10px] text-slate-400 font-bold block mt-0.5">{{ $med->brand->name }}</span>
                                     </div>
-                                    <div class="text-right">
-                                        <span class="bg-red-100 text-red-700 text-[10px] font-black px-2.5 py-1 rounded-full border border-red-200 block">
-                                            {{ $medicine->stock_quantity }} left
-                                        </span>
-                                    </div>
+                                    <span class="px-2.5 py-1 text-[10px] font-bold rounded-xl {{ $med->stock_quantity == 0 ? 'bg-red-500/10 text-red-650' : 'bg-orange-500/10 text-orange-650' }}">
+                                        {{ $med->stock_quantity }} Left
+                                    </span>
                                 </div>
                             @empty
-                                <div class="py-6 text-center text-slate-450 font-semibold text-xs">
-                                    All medicine stocks are at safe levels.
+                                <div class="py-8 text-center text-slate-400 font-semibold text-xs">
+                                    All inventory supplies are fully stocked.
                                 </div>
                             @endforelse
                         </div>
@@ -230,86 +228,87 @@
                 </div>
 
             @else
-                <!-- ================= CUSTOMER PORTAL (TRUEMEDS REFERENCE DESIGN) ================= -->
-                
-                <!-- 1. Search Header Section -->
-                <div class="search-container text-center space-y-6 shadow-sm border border-slate-100">
-                    <div class="space-y-2">
-                        <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 tracking-tight">Say GoodBye to high medicine prices</h1>
-                        <p class="text-slate-500 text-sm font-semibold">Compare prices and save up to 51% on your health essentials</p>
+                <!-- ================= CUSTOMER PORTAL SYSTEM ================= -->
+                <!-- Greeting card -->
+                <div class="bg-gradient-to-br from-teal-800 to-teal-950 rounded-3xl p-8 md:p-10 text-white shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-teal-500/10 rounded-full filter blur-3xl"></div>
+                    <span class="bg-teal-500/20 border border-teal-500/30 text-teal-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+                        Customer Portal
+                    </span>
+                    <h1 class="text-3xl md:text-4xl font-extrabold mt-4 tracking-tight">Welcome, {{ $user->name }}!</h1>
+                    <p class="text-slate-350 mt-2 text-sm max-w-xl font-light">Order your prescriptions, track delivery progress, and check medical recommendations instantly.</p>
+                </div>
+
+                <!-- Customer KPI Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <!-- Item 1 -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200/50 shadow-sm flex items-center gap-5">
+                        <div class="p-4 bg-teal-500/10 text-teal-600 rounded-2xl border border-teal-500/10">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Items in Cart</span>
+                            <span class="text-3xl font-black text-slate-900 block mt-0.5">{{ $cartCount }}</span>
+                        </div>
                     </div>
 
-                    <!-- Truemeds Search Bar -->
-                    <form action="{{ route('medicines.index') }}" method="GET" class="max-w-3xl mx-auto flex flex-col md:flex-row items-center bg-white p-2 rounded-2xl shadow-md border border-slate-150 gap-2">
-                        <!-- Location Dropdown -->
-                        <div class="flex items-center gap-2 px-4 py-2 border-r border-slate-150 shrink-0 w-full md:w-auto">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-600" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
-                            </svg>
-                            <span class="text-xs font-black text-slate-700">400079, Mumbai</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    <!-- Item 2 -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200/50 shadow-sm flex items-center gap-5">
+                        <div class="p-4 bg-indigo-500/10 text-indigo-650 rounded-2xl border border-indigo-500/10">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2" />
                             </svg>
                         </div>
-
-                        <!-- Search input -->
-                        <div class="flex-1 w-full relative">
-                            <span class="absolute inset-y-0 left-3 flex items-center pl-1 text-slate-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </span>
-                            <input type="text" name="search" placeholder="Search for medicines..." class="w-full pl-11 pr-4 py-2.5 text-sm text-slate-800 bg-transparent border-0 focus:ring-0 focus:outline-none placeholder-slate-400">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Total Orders placed</span>
+                            <span class="text-3xl font-black text-slate-900 block mt-0.5">{{ $orderCount }}</span>
                         </div>
+                    </div>
 
-                        <!-- Search button -->
-                        <button type="submit" class="w-full md:w-auto bg-blue-600 hover:bg-blue-750 text-white font-bold text-sm px-8 py-3 rounded-xl transition shadow-md flex items-center justify-center gap-2">
-                            <span>Search</span>
-                        </button>
+                    <!-- Item 3 -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200/50 shadow-sm flex items-center gap-5">
+                        <div class="p-4 bg-emerald-500/10 text-emerald-650 rounded-2xl border border-emerald-500/10">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Total Delivered Spend</span>
+                            <span class="text-3xl font-black text-slate-900 block mt-0.5">₹{{ number_format($totalSpent, 2) }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Search container -->
+                <div class="search-container p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+                    <div class="max-w-md">
+                        <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Need specific clinical medicines?</h2>
+                        <p class="text-slate-650 text-xs mt-1.5 font-medium leading-relaxed">Search through thousands of OTC & Rx pharmaceuticals on India's most modern secure platform.</p>
+                    </div>
+                    <form action="{{ route('medicines.index') }}" method="GET" class="w-full md:w-auto flex-1 max-w-md bg-white p-1.5 rounded-2xl flex border border-slate-200/40 shadow-md">
+                        <input type="text" name="search" placeholder="Type tablets, capsules, syrups..." class="flex-1 px-4 py-2.5 text-slate-800 rounded-xl focus:outline-none focus:ring-0 text-xs placeholder:text-slate-400 font-medium">
+                        <button type="submit" class="bg-teal-650 hover:bg-teal-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition">Search</button>
                     </form>
                 </div>
 
-                <!-- 2. Dual Side-by-Side Banners -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Left: Lowest Price Guaranteed -->
-                    <div class="truemeds-card overflow-hidden relative group cursor-pointer aspect-[16/9]">
-                        <img src="{{ asset('uploads/medicines/lowest_price_banner.png') }}" class="w-full h-full object-cover group-hover:scale-103 transition duration-500" alt="Lowest Price Banner">
-                        <!-- Content Overlay -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent flex flex-col justify-end p-6 text-white">
-                            <span class="bg-blue-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider w-max mb-1">Found cheaper?</span>
-                            <h3 class="text-lg sm:text-2xl font-black">We'll Pay the Difference</h3>
-                            <p class="text-xs text-slate-100 font-medium">Found a cheaper alternative online? We'll credit the difference instantly.</p>
-                        </div>
-                    </div>
-
-                    <!-- Right: Nutrition / Wellness -->
-                    <div class="truemeds-card overflow-hidden relative group cursor-pointer aspect-[16/9]">
-                        <img src="{{ asset('uploads/medicines/nutrition_banner.png') }}" class="w-full h-full object-cover group-hover:scale-103 transition duration-500" alt="Nutrition Banner">
-                        <!-- Content Overlay -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent flex flex-col justify-end p-6 text-white">
-                            <span class="bg-emerald-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider w-max mb-1">Supplements</span>
-                            <h3 class="text-lg sm:text-2xl font-black">Choose Supreme Nutrition</h3>
-                            <p class="text-xs text-slate-100 font-medium">Protein mixes, health capsule bars, and wellness syrups to fuel energy.</p>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- 3. Doctor Call assistance Stripe -->
-                <div class="doctor-stripe p-5 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+                <div class="doctor-stripe p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
                     <div class="flex items-center gap-4">
-                        <div class="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-sm text-teal-600 overflow-hidden border border-emerald-100 shrink-0">
+                        <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center shadow-sm text-teal-600 overflow-hidden border border-teal-500/10 shrink-0">
                             <!-- Friendly Doctor SVG Avatar -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-600" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                             </svg>
                         </div>
                         <div>
-                            <h4 class="font-extrabold text-emerald-950 text-base">Call us and Order medicines</h4>
-                            <p class="text-xs text-emerald-700 font-medium">Working Hours: 8:00 AM to 10:00 PM</p>
+                            <h4 class="font-extrabold text-teal-950 text-sm">Call us to place medicine orders directly</h4>
+                            <p class="text-xs text-teal-705 font-medium mt-0.5">Quick order support. Working Hours: 8:00 AM to 10:00 PM</p>
                         </div>
                     </div>
                     <div class="text-right shrink-0">
-                        <a href="tel:09240250346" class="text-xl md:text-2xl font-black text-emerald-800 hover:text-emerald-950 transition block">
+                        <a href="tel:09240250346" class="text-xl md:text-2xl font-black text-teal-800 hover:text-teal-950 transition block">
                             09240250346
                         </a>
                     </div>
@@ -318,8 +317,8 @@
                 <!-- 4. Recommended Medicines Shelf -->
                 <div class="space-y-6">
                     <div class="flex justify-between items-baseline">
-                        <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Recommended Medicines</h2>
-                        <a href="{{ route('medicines.index') }}" class="text-sm font-bold text-teal-650 hover:text-teal-800 transition">View All &rarr;</a>
+                        <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Recommended For You</h2>
+                        <a href="{{ route('medicines.index') }}" class="text-xs font-bold text-teal-605 hover:text-teal-800 transition">View Catalog &rarr;</a>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -327,22 +326,22 @@
                             <div class="truemeds-card p-5 flex flex-col justify-between group overflow-hidden bg-white">
                                 <div>
                                     <!-- Image container -->
-                                    <div class="relative w-full h-40 bg-slate-50 rounded-2xl overflow-hidden mb-4 flex items-center justify-center border border-slate-100">
+                                    <div class="relative w-full h-40 bg-slate-50 rounded-2xl overflow-hidden mb-4 flex items-center justify-center border border-slate-100 p-2">
                                         @if($medicine->image)
-                                            <img src="{{ asset($medicine->image) }}" alt="{{ $medicine->name }}" class="object-cover h-full w-full group-hover:scale-104 transition duration-500">
+                                            <img src="{{ asset($medicine->image) }}" alt="{{ $medicine->name }}" class="object-contain h-full w-full group-hover:scale-105 transition duration-300">
                                         @else
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-teal-350" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-teal-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 9.172V5L8 4z" />
                                             </svg>
                                         @endif
                                         
                                         @if($medicine->prescription_required)
-                                            <span class="absolute top-2.5 right-2.5 bg-red-100 text-red-750 text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider border border-red-200">Rx</span>
+                                            <span class="absolute top-2.5 right-2.5 bg-red-500/10 border border-red-500/20 text-red-650 text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Rx</span>
                                         @endif
                                     </div>
 
-                                    <span class="text-[9px] text-gray-400 font-bold uppercase tracking-widest block">{{ $medicine->brand->name }}</span>
-                                    <h3 class="font-extrabold text-slate-800 text-sm mt-1 line-clamp-1 group-hover:text-teal-700 transition">{{ $medicine->name }}</h3>
+                                    <span class="text-[9px] text-slate-400 font-bold uppercase tracking-widest block">{{ $medicine->brand->name }}</span>
+                                    <h3 class="font-extrabold text-slate-900 text-sm mt-1 line-clamp-1 group-hover:text-teal-700 transition" title="{{ $medicine->name }}">{{ $medicine->name }}</h3>
                                     <p class="text-[10px] text-teal-650 font-bold mt-0.5">{{ $medicine->category->name }}</p>
                                 </div>
 
@@ -350,13 +349,13 @@
                                     <div class="flex items-baseline gap-1.5 mb-3">
                                         <span class="text-lg font-black text-teal-750">₹{{ number_format($medicine->selling_price, 2) }}</span>
                                         @if($medicine->mrp > $medicine->selling_price)
-                                            <span class="text-xs text-gray-400 line-through">₹{{ number_format($medicine->mrp, 2) }}</span>
+                                            <span class="text-xs text-slate-400 line-through font-semibold">₹{{ number_format($medicine->mrp, 2) }}</span>
                                         @endif
                                     </div>
 
                                     <form action="{{ route('cart.add', $medicine) }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="w-full bg-teal-650 hover:bg-teal-750 text-white font-bold text-xs py-2.5 rounded-xl transition shadow-sm">
+                                        <button type="submit" class="w-full bg-teal-650 hover:bg-teal-700 text-white font-bold text-xs py-2.5 rounded-xl transition shadow-md shadow-teal-500/10 active:scale-95">
                                             Add to Cart
                                         </button>
                                     </form>
@@ -367,141 +366,47 @@
                 </div>
 
                 <!-- 5. Testimonials (What our customers have to say) -->
-                <div class="space-y-6">
-                    <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight text-center">What our customers have to say</h2>
+                <div class="space-y-6 border-t border-slate-200/50 pt-10">
+                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight text-center">Loved by 10,000+ Customers</h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <!-- Review 1 -->
-                        <div class="bg-white p-6 rounded-3xl border border-slate-150 shadow-sm flex flex-col justify-between">
+                        <div class="bg-white p-6 rounded-3xl border border-slate-200/50 shadow-sm flex flex-col justify-between hover:border-teal-550/10 transition">
                             <div class="space-y-3">
-                                <div class="flex text-orange-400">
-                                    &#9733; &#9733; &#9733; &#9733; &#9733;
+                                <div class="flex text-orange-400 font-bold text-sm">
+                                    ★★★★★
                                 </div>
-                                <h4 class="font-black text-slate-800 text-sm">Provides doorstep delivery</h4>
-                                <p class="text-xs text-slate-500 leading-relaxed">"Can order from anywhere and any time since Medicare provides doorstep delivery. Extremely helpful."</p>
+                                <h4 class="font-extrabold text-slate-800 text-sm">Convenient doorstep delivery</h4>
+                                <p class="text-xs text-slate-500 leading-relaxed font-medium">"I can order from anywhere and at any time. Medicare provides secure doorstep delivery. Extremely helpful for my parents!"</p>
                             </div>
-                            <span class="text-[10px] text-slate-400 font-bold block mt-4">- Subhash Sehgal</span>
+                            <span class="text-[10px] text-slate-450 font-bold block mt-4">- Subhash Sehgal</span>
                         </div>
 
                         <!-- Review 2 -->
-                        <div class="bg-white p-6 rounded-3xl border border-slate-150 shadow-sm flex flex-col justify-between">
+                        <div class="bg-white p-6 rounded-3xl border border-slate-200/50 shadow-sm flex flex-col justify-between hover:border-teal-550/10 transition">
                             <div class="space-y-3">
-                                <div class="flex text-orange-400">
-                                    &#9733; &#9733; &#9733; &#9733; &#9733;
+                                <div class="flex text-orange-400 font-bold text-sm">
+                                    ★★★★★
                                 </div>
-                                <h4 class="font-black text-slate-800 text-sm">Used the app and found it easy</h4>
-                                <p class="text-xs text-slate-500 leading-relaxed">"Excellent interface. All info about substitutes is readily available, and checkout response was prompt."</p>
+                                <h4 class="font-extrabold text-slate-800 text-sm">Very user friendly app</h4>
+                                <p class="text-xs text-slate-500 leading-relaxed font-medium">"Excellent user interface. Substitute information is readily available, and customer service response is fast."</p>
                             </div>
-                            <span class="text-[10px] text-slate-400 font-bold block mt-4">- Deepali Sharma</span>
+                            <span class="text-[10px] text-slate-450 font-bold block mt-4">- Deepali Sharma</span>
                         </div>
 
                         <!-- Review 3 -->
-                        <div class="bg-white p-6 rounded-3xl border border-slate-150 shadow-sm flex flex-col justify-between">
+                        <div class="bg-white p-6 rounded-3xl border border-slate-200/50 shadow-sm flex flex-col justify-between hover:border-teal-550/10 transition">
                             <div class="space-y-3">
-                                <div class="flex text-orange-400">
-                                    &#9733; &#9733; &#9733; &#9733; &#9733;
+                                <div class="flex text-orange-400 font-bold text-sm">
+                                    ★★★★★
                                 </div>
-                                <h4 class="font-black text-slate-800 text-sm">Very customer friendly portal</h4>
-                                <p class="text-xs text-slate-500 leading-relaxed">"Medicare is the best. The team did not reduce the discounts, which shows their patient-friendly values. Thank you."</p>
+                                <h4 class="font-extrabold text-slate-800 text-sm">Unbeatable pricing and discounts</h4>
+                                <p class="text-xs text-slate-500 leading-relaxed font-medium">"Medicare consistently offers the best rates on original clinical products. Applying coupons is super easy too!"</p>
                             </div>
-                            <span class="text-[10px] text-slate-400 font-bold block mt-4">- Rajesh K.</span>
+                            <span class="text-[10px] text-slate-450 font-bold block mt-4">- Ramesh Iyer</span>
                         </div>
                     </div>
                 </div>
-
-                <!-- 6. Accordion FAQs -->
-                <div x-data="{ active: null }" class="space-y-6 max-w-4xl mx-auto">
-                    <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight text-center">FAQs</h2>
-                    
-                    <div class="bg-white rounded-3xl border border-slate-150 divide-y divide-slate-100 overflow-hidden shadow-sm">
-                        <!-- FAQ 1 -->
-                        <div class="w-full text-left">
-                            <button @click="active = (active === 1 ? null : 1)" class="w-full px-6 py-5 flex items-center justify-between text-slate-850 hover:bg-slate-50 transition focus:outline-none">
-                                <span class="text-sm font-extrabold">Is opting for substitutes safe?</span>
-                                <span class="text-slate-400 transition" :class="active === 1 ? 'rotate-180' : ''">&#9662;</span>
-                            </button>
-                            <div x-show="active === 1" x-collapse class="px-6 pb-5 text-xs text-slate-500 leading-relaxed">
-                                Yes. Substitutes contain the exact same chemical salts and active therapeutic molecules as the branded medications, formulated in equivalent strengths under strict clinical protocols.
-                            </div>
-                        </div>
-
-                        <!-- FAQ 2 -->
-                        <div class="w-full text-left">
-                            <button @click="active = (active === 2 ? null : 2)" class="w-full px-6 py-5 flex items-center justify-between text-slate-850 hover:bg-slate-50 transition focus:outline-none">
-                                <span class="text-sm font-extrabold">Is there a guarantee on the quality of substitutes?</span>
-                                <span class="text-slate-400 transition" :class="active === 2 ? 'rotate-180' : ''">&#9662;</span>
-                            </button>
-                            <div x-show="active === 2" x-collapse class="px-6 pb-5 text-xs text-slate-500 leading-relaxed">
-                                Absolutely. All substitutes are sourced from certified pharmaceutical manufacturing labs complying with international medical regulations and quality standards.
-                            </div>
-                        </div>
-
-                        <!-- FAQ 3 -->
-                        <div class="w-full text-left">
-                            <button @click="active = (active === 3 ? null : 3)" class="w-full px-6 py-5 flex items-center justify-between text-slate-850 hover:bg-slate-50 transition focus:outline-none">
-                                <span class="text-sm font-extrabold">How can I avail free delivery?</span>
-                                <span class="text-slate-400 transition" :class="active === 3 ? 'rotate-180' : ''">&#9662;</span>
-                            </button>
-                            <div x-show="active === 3" x-collapse class="px-6 pb-5 text-xs text-slate-500 leading-relaxed">
-                                All orders with values above ₹500 receive automatic free shipping at checkout. Standard delivery fees apply to orders below this threshold.
-                            </div>
-                        </div>
-
-                        <!-- FAQ 4 -->
-                        <div class="w-full text-left">
-                            <button @click="active = (active === 4 ? null : 4)" class="w-full px-6 py-5 flex items-center justify-between text-slate-850 hover:bg-slate-50 transition focus:outline-none">
-                                <span class="text-sm font-extrabold">What is Medicare Online Store?</span>
-                                <span class="text-slate-400 transition" :class="active === 4 ? 'rotate-180' : ''">&#9662;</span>
-                            </button>
-                            <div x-show="active === 4" x-collapse class="px-6 pb-5 text-xs text-slate-500 leading-relaxed">
-                                Medicare is a premier healthcare delivery platform that enables users to purchase authentic prescription medicines and supplements at competitive discounts.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 7. Patient Statistics Grid -->
-                <div class="bg-white rounded-3xl p-6 border border-slate-150 shadow-sm space-y-6">
-                    <h3 class="font-extrabold text-slate-800 text-lg tracking-tight">Patient Dashboard History</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                        <div class="p-5 bg-teal-50/50 rounded-2xl flex items-center gap-4">
-                            <div class="p-3 bg-teal-100 text-teal-700 rounded-xl">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Items in Cart</span>
-                                <span class="text-2xl font-black text-slate-850 block mt-0.5">{{ $cartCount }}</span>
-                            </div>
-                        </div>
-
-                        <div class="p-5 bg-blue-50/50 rounded-2xl flex items-center gap-4">
-                            <div class="p-3 bg-blue-100 text-blue-700 rounded-xl">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2" />
-                                </svg>
-                            </div>
-                            <div>
-                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Total Placed Orders</span>
-                                <span class="text-2xl font-black text-slate-850 block mt-0.5">{{ $orderCount }}</span>
-                            </div>
-                        </div>
-
-                        <div class="p-5 bg-emerald-50/50 rounded-2xl flex items-center gap-4">
-                            <div class="p-3 bg-emerald-100 text-emerald-700 rounded-xl">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Total Spent</span>
-                                <span class="text-2xl font-black text-slate-850 block mt-0.5">₹{{ number_format($totalSpent, 2) }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             @endif
 
         </div>

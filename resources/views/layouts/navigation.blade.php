@@ -14,16 +14,16 @@
     }
 @endphp
 
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+<nav x-data="{ open: false }" class="glass-panel sticky top-0 z-50 shadow-sm border-b border-teal-500/10">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
-                        <span class="w-9 h-9 rounded-xl bg-teal-600 flex items-center justify-center text-white font-extrabold text-base shadow-sm">M</span>
-                        <span class="text-lg font-bold tracking-tight text-gray-900">Medi<span class="text-orange-500">care</span></span>
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2 group">
+                        <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center text-white font-extrabold text-lg shadow-md transition group-hover:scale-105">M</span>
+                        <span class="text-xl font-bold tracking-tight text-teal-800 transition group-hover:text-teal-900">Medi<span class="text-orange-500">care</span></span>
                     </a>
                 </div>
 

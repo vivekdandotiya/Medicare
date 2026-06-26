@@ -8,11 +8,20 @@
         <title>Medicare - Access Portal</title>
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <style>
+            body {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+            h1, h2, h3, h4, .font-display {
+                font-family: 'Outfit', sans-serif;
+            }
+        </style>
     </head>
     <body class="font-sans text-gray-900 antialiased min-h-screen flex items-center justify-center py-10 px-4 relative bg-cover bg-center bg-no-repeat" style="background-image: url('{{ asset('images/medical_background.png') }}');">
         <!-- Background Overlay -->
