@@ -28,13 +28,13 @@
          x-transition:leave="transition ease-in duration-200 transform"
          x-transition:leave-start="opacity-100 translate-y-0 scale-100"
          x-transition:leave-end="opacity-0 translate-y-8 scale-95"
-         class="absolute bottom-18 right-0 w-[350px] sm:w-[380px] h-[500px] bg-white/95 backdrop-blur-xl border border-slate-200/60 rounded-3xl shadow-2xl flex flex-col overflow-hidden"
+         class="absolute bottom-[72px] right-0 w-[350px] sm:w-[380px] h-[500px] bg-white/95 backdrop-blur-xl border border-slate-200/60 rounded-3xl shadow-2xl flex flex-col overflow-hidden"
          style="display: none;">
          
         <!-- Header -->
         <div class="bg-gradient-to-r from-slate-900 to-teal-950 p-4 text-white flex justify-between items-center border-b border-teal-950/20">
             <div class="flex items-center gap-2.5">
-                <span class="w-8.5 h-8.5 rounded-lg bg-teal-500 flex items-center justify-center text-white font-extrabold text-sm shadow-md">M</span>
+                <span class="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center text-white font-extrabold text-sm shadow-md">M</span>
                 <div>
                     <h3 class="font-extrabold text-sm tracking-wide">Medicare AI Advisor</h3>
                     <div class="flex items-center gap-1.5 mt-0.5">
@@ -44,7 +44,7 @@
                 </div>
             </div>
             <button @click="open = false" class="text-slate-400 hover:text-white transition p-1 hover:bg-white/10 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
@@ -100,8 +100,8 @@
                    placeholder="Ask for tablet advice (e.g. fever)..."
                    class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-teal-500 focus:ring-0 focus:outline-none font-medium placeholder:text-slate-400">
             <button @click="submitMessage()" 
-                    class="w-8.5 h-8.5 bg-teal-600 hover:bg-teal-750 text-white rounded-xl flex items-center justify-center transition shadow-md shadow-teal-500/10 active:scale-90">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    class="w-9 h-9 bg-teal-650 hover:bg-teal-700 text-white rounded-xl flex items-center justify-center transition shadow-md shadow-teal-500/10 active:scale-90">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9-7-9-7v14z" />
                 </svg>
             </button>
