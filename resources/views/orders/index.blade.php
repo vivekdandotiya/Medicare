@@ -97,6 +97,93 @@
                             </div>
                         </div>
 
+                        <!-- Progress Tracking Timeline -->
+                        <div class="bg-slate-50/70 border border-slate-200/40 rounded-2xl p-6">
+                            @if($order->status === 'cancelled')
+                                <div class="flex items-center gap-3 text-red-750 bg-red-50/60 p-4 rounded-xl border border-red-200/40 text-xs font-semibold">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    <div>
+                                        <p class="font-bold text-sm">Order Cancelled</p>
+                                        <p class="text-[11px] text-red-500 mt-0.5">This transaction was cancelled. If you believe this is an error, please contact customer support.</p>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="relative flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-0">
+                                    <!-- Connecting Line Background -->
+                                    <div class="hidden sm:block absolute left-0 right-0 top-5 h-1 bg-slate-200 -z-10 rounded-full"></div>
+                                    <!-- Active Filled Line -->
+                                    @php
+                                        $width = '0%';
+                                        if ($order->status === 'processing') $width = '33%';
+                                        elseif ($order->status === 'shipped') $width = '66%';
+                                        elseif ($order->status === 'delivered') $width = '100%';
+                                    @endphp
+                                    <div class="hidden sm:block absolute left-0 top-5 h-1 bg-teal-500 -z-10 rounded-full transition-all duration-500" style="width: {{ $width }}"></div>
+
+                                    <!-- Step 1: Placed -->
+                                    <div class="flex flex-col items-center text-center">
+                                        <div class="w-10 h-10 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold shadow-md shadow-teal-500/25 ring-4 ring-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                            </svg>
+                                        </div>
+                                        <span class="text-xs font-black text-slate-800 mt-2">Order Placed</span>
+                                        <span class="text-[10px] text-slate-400 mt-0.5 font-medium">Payment secured</span>
+                                    </div>
+
+                                    <!-- Step 2: Processing -->
+                                    @php
+                                        $isProc = in_array($order->status, ['processing', 'shipped', 'delivered']);
+                                        $circleBg = $isProc ? 'bg-teal-500 text-white shadow-teal-500/25' : 'bg-slate-100 text-slate-400';
+                                        $textCol = $isProc ? 'text-slate-800 font-black' : 'text-slate-400 font-semibold';
+                                    @endphp
+                                    <div class="flex flex-col items-center text-center">
+                                        <div class="w-10 h-10 rounded-full {{ $circleBg }} flex items-center justify-center font-bold transition duration-300 ring-4 ring-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 9.172V5L8 4z" />
+                                            </svg>
+                                        </div>
+                                        <span class="text-xs {{ $textCol }} mt-2">Rx Verification</span>
+                                        <span class="text-[10px] text-slate-400 mt-0.5 font-medium">Pharmacist review</span>
+                                    </div>
+
+                                    <!-- Step 3: Shipped -->
+                                    @php
+                                        $isShip = in_array($order->status, ['shipped', 'delivered']);
+                                        $circleBg = $isShip ? 'bg-teal-500 text-white shadow-teal-500/25' : 'bg-slate-100 text-slate-400';
+                                        $textCol = $isShip ? 'text-slate-800 font-black' : 'text-slate-400 font-semibold';
+                                    @endphp
+                                    <div class="flex flex-col items-center text-center">
+                                        <div class="w-10 h-10 rounded-full {{ $circleBg }} flex items-center justify-center font-bold transition duration-300 ring-4 ring-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <span class="text-xs {{ $textCol }} mt-2">Dispatched</span>
+                                        <span class="text-[10px] text-slate-400 mt-0.5 font-medium">In transit</span>
+                                    </div>
+
+                                    <!-- Step 4: Delivered -->
+                                    @php
+                                        $isDel = $order->status === 'delivered';
+                                        $circleBg = $isDel ? 'bg-teal-500 text-white shadow-teal-500/25' : 'bg-slate-100 text-slate-400';
+                                        $textCol = $isDel ? 'text-slate-800 font-black' : 'text-slate-400 font-semibold';
+                                    @endphp
+                                    <div class="flex flex-col items-center text-center">
+                                        <div class="w-10 h-10 rounded-full {{ $circleBg }} flex items-center justify-center font-bold transition duration-300 ring-4 ring-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                        <span class="text-xs {{ $textCol }} mt-2">Delivered</span>
+                                        <span class="text-[10px] text-slate-400 mt-0.5 font-medium">At your doorstep</span>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+
                         <!-- Order Information Grid -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                             
