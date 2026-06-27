@@ -254,6 +254,221 @@
             </div>
         </section>
 
+        <!-- Wellness & Health Insights Section -->
+        <section x-data="{
+            activeArticle: null,
+            readProgress: 0,
+            simulatedTimer: null,
+            openModal(article) {
+                this.activeArticle = article;
+                this.readProgress = 0;
+                if (this.simulatedTimer) clearInterval(this.simulatedTimer);
+                this.simulatedTimer = setInterval(() => {
+                    if (this.readProgress < 100) {
+                        this.readProgress += 5;
+                    } else {
+                        clearInterval(this.simulatedTimer);
+                    }
+                }, 100);
+            },
+            closeModal() {
+                this.activeArticle = null;
+                if (this.simulatedTimer) clearInterval(this.simulatedTimer);
+            },
+            articles: [
+                {
+                    id: 1,
+                    title: 'Natural Remedies for Cold & Dry Cough',
+                    subtitle: 'Combating Winter Allergies & Throat Pain',
+                    category: 'Herbal Care',
+                    readTime: '4 min read',
+                    author: 'Dr. Ananya Sharma, MD',
+                    avatar: 'AS',
+                    date: 'June 25, 2026',
+                    content: 'As winter approaches, dry cough and throat irritation become extremely common. While clinical syrups like Dabur Honitus or Himalaya Koflet provide swift relief, natural lifestyle shifts can accelerate recovery. Integrating ginger-infused warm water, raw honey, and steam inhalation before bed helps soothe bronchial pathways. Remember: if throat irritation persists for more than 5 days or is accompanied by high fever, consult a certified physician.',
+                    recommendations: [
+                        { name: 'Himalaya Koflet', link: '/medicines?search=Koflet' },
+                        { name: 'Dabur Honitus', link: '/medicines?search=Honitus' },
+                        { name: 'Strepsils Lozenges', link: '/medicines?search=Strepsils' }
+                    ],
+                    bgColor: 'from-emerald-50/50 to-teal-50/30',
+                    borderCol: 'border-teal-500/20',
+                    textColor: 'text-teal-700',
+                    badgeBg: 'bg-teal-50 text-teal-700'
+                },
+                {
+                    id: 2,
+                    title: 'Daily Vitamins: Boost Immunity & Energy',
+                    subtitle: 'Understanding Limcee & Essential Nutrients',
+                    category: 'Nutrition & Health',
+                    readTime: '3 min read',
+                    author: 'Dr. Rahul Mehta, DNB',
+                    avatar: 'RM',
+                    date: 'June 24, 2026',
+                    content: 'Vitamin C is a powerful antioxidant that supports cellular immune function. Daily supplements like Limcee (500mg chewable Vitamin C tablets) assist in strengthening skin barriers, tissue healing, and iron absorption. Regular intake is crucial during weather transitions. Ensure you combine supplements with citrus fruits, leafy greens, and adequate hydration for optimal absorption and energy levels.',
+                    recommendations: [
+                        { name: 'Limcee Vitamin C', link: '/medicines?search=Limcee' }
+                    ],
+                    bgColor: 'from-amber-50/50 to-orange-50/30',
+                    borderCol: 'border-orange-500/20',
+                    textColor: 'text-orange-700',
+                    badgeBg: 'bg-orange-50 text-orange-700'
+                },
+                {
+                    id: 3,
+                    title: 'Understanding Antibiotics and Prescriptions',
+                    subtitle: 'Safety Rules & Guidelines for Medication Courses',
+                    category: 'Clinical Guide',
+                    readTime: '5 min read',
+                    author: 'Dr. Sarah Pierce, PharmD',
+                    avatar: 'SP',
+                    date: 'June 22, 2026',
+                    content: 'Antibiotic resistance is a rising clinical concern. It occurs when bacteria adapt to survive the drugs meant to kill them. Always complete the entire prescribed course of medicines, even if symptoms vanish early. Stopping treatment prematurely can lead to recurrent, stronger infections. Only purchase antibiotics with a valid doctor prescription certified by registered practitioners.',
+                    recommendations: [
+                        { name: 'Upload Prescription', link: '/prescriptions' }
+                    ],
+                    bgColor: 'from-blue-50/50 to-indigo-50/30',
+                    borderCol: 'border-blue-500/20',
+                    textColor: 'text-blue-700',
+                    badgeBg: 'bg-blue-50 text-blue-700'
+                }
+            ]
+        }" class="py-16 bg-slate-50 border-t border-slate-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Section Header -->
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200/50 mb-3 uppercase tracking-wider">
+                        Wellness & Health Insights
+                    </span>
+                    <h2 class="text-3xl font-black text-slate-800 tracking-tight sm:text-4xl">
+                        Expert Advice & Clinical Guides
+                    </h2>
+                    <p class="mt-4 text-slate-550 font-normal leading-relaxed text-sm sm:text-base">
+                        Read trusted health articles curated by professional medical advisors to assist you in everyday healthcare, wellness, and symptom management.
+                    </p>
+                </div>
+
+                <!-- Articles Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <template x-for="article in articles" :key="article.id">
+                        <div class="bg-white rounded-2xl border border-slate-150 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-350 flex flex-col group h-full">
+                            <!-- Card Header Splash -->
+                            <div :class="`h-2 bg-gradient-to-r ${article.bgColor}`" class="w-full"></div>
+                            
+                            <div class="p-6 flex-1 flex flex-col justify-between">
+                                <div>
+                                    <!-- Meta -->
+                                    <div class="flex items-center justify-between mb-4">
+                                        <span x-text="article.category" :class="article.badgeBg" class="text-[11px] font-bold px-2.5 py-1 rounded-md tracking-wide"></span>
+                                        <span x-text="article.readTime" class="text-xs text-slate-400 font-medium"></span>
+                                    </div>
+
+                                    <!-- Title -->
+                                    <h3 x-text="article.title" class="text-lg font-black text-slate-800 tracking-tight group-hover:text-teal-650 transition duration-150 mb-2 leading-snug"></h3>
+                                    <!-- Subtitle -->
+                                    <p x-text="article.subtitle" class="text-xs text-slate-500 font-medium mb-4 leading-relaxed line-clamp-2"></p>
+                                </div>
+
+                                <div class="mt-6 border-t border-slate-100 pt-4 flex items-center justify-between">
+                                    <!-- Author info -->
+                                    <div class="flex items-center gap-2.5">
+                                        <div :class="`w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-xs ${article.textColor}`" x-text="article.avatar"></div>
+                                        <div>
+                                            <p class="text-[11px] font-bold text-slate-700" x-text="article.author"></p>
+                                            <p class="text-[10px] text-slate-400 font-medium" x-text="article.date"></p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Read CTA Button -->
+                                    <button @click="openModal(article)" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-50 border border-slate-200 text-slate-600 hover:bg-teal-50 hover:border-teal-300 hover:text-teal-700 transition active:scale-95">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0/0/24/24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9/5l7/7-7/7" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Reading Modal Overlay -->
+            <div x-show="activeArticle" 
+                 class="fixed inset-0 z-50 flex items-center justify-center px-4 sm:px-6"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 style="display: none;">
+                
+                <!-- Backdrop -->
+                <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" @click="closeModal()"></div>
+
+                <!-- Modal Content -->
+                <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden relative z-10 border border-slate-200">
+                    <!-- Reading Progress Bar -->
+                    <div class="h-1.5 w-full bg-slate-100">
+                        <div class="h-full bg-teal-500 transition-all duration-100" :style="`width: ${readProgress}%`"></div>
+                    </div>
+
+                    <!-- Header -->
+                    <div class="p-6 sm:p-8 pb-4 flex justify-between items-start">
+                        <div>
+                            <span x-text="activeArticle?.category" :class="activeArticle?.badgeBg" class="text-xs font-bold px-3 py-1 rounded-md tracking-wider"></span>
+                            <h2 x-text="activeArticle?.title" class="text-xl sm:text-2xl font-black text-slate-800 tracking-tight mt-3 leading-snug"></h2>
+                            <p x-text="activeArticle?.subtitle" class="text-sm text-slate-500 font-medium mt-1 leading-relaxed"></p>
+                        </div>
+                        <button @click="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition active:scale-95">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0/0/24/24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6/18L18/6M6/6l12/12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Author Meta & Date -->
+                    <div class="px-6 sm:px-8 pb-4 border-b border-slate-100 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center font-bold text-sm text-teal-700" x-text="activeArticle?.avatar"></div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-800" x-text="activeArticle?.author"></p>
+                            <p class="text-xs text-slate-400 font-medium" x-text="`Published: ${activeArticle?.date} • ${activeArticle?.readTime}`"></p>
+                        </div>
+                    </div>
+
+                    <!-- Body Content -->
+                    <div class="p-6 sm:p-8 max-h-[350px] overflow-y-auto">
+                        <p x-text="activeArticle?.content" class="text-slate-600 font-normal leading-relaxed text-sm sm:text-base whitespace-pre-line"></p>
+                        
+                        <!-- Recommended Products Widget -->
+                        <div class="mt-8 bg-slate-50 rounded-2xl p-5 border border-slate-250/30">
+                            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">Recommended Products / Action</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <template x-for="rec in activeArticle?.recommendations">
+                                    <a :href="rec.link" class="inline-flex items-center gap-1 bg-white hover:bg-teal-50 border border-slate-200 hover:border-teal-300 text-xs font-bold text-slate-700 hover:text-teal-700 px-3 py-2 rounded-xl transition shadow-sm active:scale-95">
+                                        <svg xmlns="http://www.w3.org/2050/svg" class="h-3.5 w-3.5 text-teal-500" fill="none" viewBox="0/0/24/24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16/11V7a4/4/0/00-8/0v4M5/9h14l1/12H4L5/9z" />
+                                        </svg>
+                                        <span x-text="rec.name"></span>
+                                    </a>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Action -->
+                    <div class="bg-slate-50 border-t border-slate-100 p-4 sm:p-6 flex justify-end gap-3">
+                        <button @click="closeModal()" class="px-5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs transition active:scale-95">
+                            Close Guide
+                        </button>
+                        <a href="/medicines" class="px-5 py-2.5 rounded-xl bg-teal-650 hover:bg-teal-700 text-white font-bold text-xs transition shadow-md shadow-teal-600/10 active:scale-95">
+                            Browse Store
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Footer -->
         <footer class="bg-slate-900 text-slate-450 py-16 border-t border-slate-800">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
