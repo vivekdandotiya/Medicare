@@ -34,6 +34,16 @@ class MedicineController extends Controller
             $query->where('brand_id', $request->brand);
         }
 
+        // Price filter
+        if ($request->has('max_price') && $request->max_price != '') {
+            $query->where('selling_price', '<=', $request->max_price);
+        }
+
+        // Prescription filter (Rx Required)
+        if ($request->has('rx_only') && $request->rx_only == '1') {
+            $query->where('prescription_required', true);
+        }
+
         $medicines = $query->latest()->paginate(12);
         $categories = Category::all();
         $brands = Brand::all();
