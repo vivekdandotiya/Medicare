@@ -184,17 +184,18 @@
                         @forelse($medicines as $medicine)
                             <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-xl hover:border-teal-500/10 transition duration-300 overflow-hidden flex flex-col justify-between group relative">
                                 <div class="p-5">
-                                    <div class="relative w-full h-44 bg-slate-50 rounded-2xl overflow-hidden mb-4 flex items-center justify-center border border-slate-100/50">
+                                    <div @click="window.dispatchEvent(new CustomEvent('open-medicine-modal', { detail: { id: {{ $medicine->id }}, name: '{{ addslashes($medicine->name) }}', brand_name: '{{ addslashes($medicine->brand->name) }}', category_name: '{{ addslashes($medicine->category->name) }}', selling_price: {{ $medicine->selling_price }}, mrp: {{ $medicine->mrp }}, description: '{{ addslashes($medicine->description) }}', prescription_required: {{ $medicine->prescription_required ? 'true' : 'false' }}, image: '{{ $medicine->image }}', stock_quantity: {{ $medicine->stock_quantity }} } }))"
+                                         class="relative w-full h-44 bg-slate-50 rounded-2xl overflow-hidden mb-4 flex items-center justify-center border border-slate-100/50 cursor-pointer hover:opacity-90 transition">
                                         @if($medicine->image)
                                             <img src="{{ asset($medicine->image) }}" alt="{{ $medicine->name }}" class="object-contain p-4 h-full w-full group-hover:scale-105 transition duration-300">
                                         @else
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-teal-205" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-teal-255" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 9.172V5L8 4z" />
                                             </svg>
                                         @endif
 
                                         @if($medicine->prescription_required)
-                                            <span class="absolute top-3 right-3 bg-red-500/10 border border-red-500/20 text-red-650 text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider backdrop-blur-md">Rx Required</span>
+                                            <span class="absolute top-3 right-3 bg-red-500/10 border border-red-500/20 text-red-655 text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider backdrop-blur-md">Rx Required</span>
                                         @endif
                                     </div>
 
@@ -202,7 +203,8 @@
                                         <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{{ $medicine->brand->name }}</span>
                                         <span class="text-[10px] text-teal-655 bg-teal-50 border border-teal-500/10 font-bold px-2 py-0.5 rounded-full">{{ $medicine->category->name }}</span>
                                     </div>
-                                    <h3 class="font-bold text-slate-900 text-base mt-2 group-hover:text-teal-700 transition line-clamp-1" title="{{ $medicine->name }}">{{ $medicine->name }}</h3>
+                                    <h3 @click="window.dispatchEvent(new CustomEvent('open-medicine-modal', { detail: { id: {{ $medicine->id }}, name: '{{ addslashes($medicine->name) }}', brand_name: '{{ addslashes($medicine->brand->name) }}', category_name: '{{ addslashes($medicine->category->name) }}', selling_price: {{ $medicine->selling_price }}, mrp: {{ $medicine->mrp }}, description: '{{ addslashes($medicine->description) }}', prescription_required: {{ $medicine->prescription_required ? 'true' : 'false' }}, image: '{{ $medicine->image }}', stock_quantity: {{ $medicine->stock_quantity }} } }))"
+                                        class="font-bold text-slate-900 text-base mt-2 group-hover:text-teal-700 transition line-clamp-1 cursor-pointer" title="{{ $medicine->name }}">{{ $medicine->name }}</h3>
                                     <p class="text-slate-450 text-[11px] mt-2 line-clamp-2 leading-relaxed h-8">{{ $medicine->description ?? 'Premium medicine formulation for dynamic care.' }}</p>
                                 </div>
 

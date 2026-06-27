@@ -44,5 +44,8 @@
         
         <!-- Global Chatbot Widget -->
         @include('components.chatbot')
+
+        <!-- Global Product Detail Drawer -->
+        @include('components.product-detail-modal')
     </body>
 </html>
