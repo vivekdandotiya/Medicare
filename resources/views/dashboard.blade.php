@@ -281,6 +281,104 @@
                     </div>
                 </div>
 
+                <!-- Medication Routine Tracker Widget -->
+                <div x-data="{
+                    newPillName: '',
+                    newPillTime: 'Morning',
+                    pills: [
+                        { id: 1, name: 'Chewable Limcee 500mg', time: 'Afternoon', taken: true, custom: false },
+                        { id: 2, name: 'Amoxyclav 625 Duo', time: 'Morning', taken: false, custom: false },
+                        { id: 3, name: 'Strepsils Lozenge', time: 'Night', taken: true, custom: false }
+                    ],
+                    addPill() {
+                        if (!this.newPillName.trim()) return;
+                        this.pills.push({
+                            id: Date.now(),
+                            name: this.newPillName.trim(),
+                            time: this.newPillTime,
+                            taken: false,
+                            custom: true
+                        });
+                        this.newPillName = '';
+                    },
+                    removePill(id) {
+                        this.pills = this.pills.filter(p => p.id !== id);
+                    },
+                    get percentTaken() {
+                        if (this.pills.length === 0) return 0;
+                        const takenCount = this.pills.filter(p => p.taken).length;
+                        return Math.round((takenCount / this.pills.length) * 100);
+                    },
+                    get takenCount() {
+                        return this.pills.filter(p => p.taken).length;
+                    }
+                }" class="bg-white rounded-3xl p-6 border border-slate-200/50 shadow-sm hover:border-teal-500/10 transition">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                        <div>
+                            <h3 class="font-extrabold text-slate-900 text-lg tracking-tight flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-650" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                                Medication Intake Tracker
+                            </h3>
+                            <p class="text-xs text-slate-550 mt-1 font-medium">Log your daily pill courses and track dosage compliance.</p>
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-50 px-3.5 py-1.5 rounded-xl border border-slate-200/30">
+                            <span class="text-xs font-bold text-slate-700">Today's Progress:</span>
+                            <span class="text-xs font-black text-teal-700" x-text="`${takenCount}/${pills.length} taken (${percentTaken}%)`"></span>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden mb-6">
+                        <div class="h-full bg-teal-500 rounded-full transition-all duration-300" :style="`width: ${percentTaken}%`"></div>
+                    </div>
+
+                    <!-- Reminders Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- List -->
+                        <div class="space-y-3">
+                            <template x-for="pill in pills" :key="pill.id">
+                                <div class="flex items-center justify-between p-3.5 rounded-2xl border transition"
+                                     :class="pill.taken ? 'bg-teal-50/20 border-teal-200/50' : 'bg-white border-slate-200/60'">
+                                    <div class="flex items-center gap-3">
+                                        <input type="checkbox" x-model="pill.taken" class="rounded border-slate-350 text-teal-650 focus:ring-teal-500 h-4.5 w-4.5 cursor-pointer">
+                                        <div>
+                                            <span x-text="pill.name" :class="pill.taken ? 'line-through text-slate-450' : 'text-slate-805'" class="text-xs font-bold"></span>
+                                            <span x-text="pill.time" class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5"></span>
+                                        </div>
+                                    </div>
+                                    <template x-if="pill.custom">
+                                        <button @click="removePill(pill.id)" class="text-slate-400 hover:text-red-500 text-xs font-bold px-2 py-1 rounded transition">&times;</button>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+
+                        <!-- Inline Add Reminder Form -->
+                        <div class="bg-slate-50/50 rounded-2xl p-5 border border-slate-200/40">
+                            <h4 class="text-[10px] font-extrabold text-slate-450 uppercase tracking-widest mb-4">Add Medication Schedule</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Medicine Name</label>
+                                    <input type="text" x-model="newPillName" placeholder="e.g. Paracetamol 500mg" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:border-teal-500 transition font-semibold">
+                                </div>
+                                <div>
+                                    <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Dosage Time</label>
+                                    <select x-model="newPillTime" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-655 focus:outline-none focus:border-teal-500 transition">
+                                        <option value="Morning">Morning (After Breakfast)</option>
+                                        <option value="Afternoon">Afternoon (After Lunch)</option>
+                                        <option value="Night">Evening / Night (Before Bed)</option>
+                                    </select>
+                                </div>
+                                <button @click="addPill" type="button" class="w-full bg-teal-650 hover:bg-teal-700 text-white font-bold text-xs py-3 rounded-xl transition shadow-md shadow-teal-500/10 active:scale-95">
+                                    Add Intake Reminder
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 2. Search container -->
                 <div class="search-container p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
                     <div class="max-w-md">
