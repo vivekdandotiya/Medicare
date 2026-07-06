@@ -172,6 +172,107 @@
                     </form>
                 </div>
 
+                <!-- Virtual Pharmacist Booking Card -->
+                <div x-data="{
+                    openBooking: false,
+                    specialty: 'Prescription Queries',
+                    date: '',
+                    slot: '10:00 AM - 10:15 AM',
+                    bookingResult: null,
+                    submitBooking() {
+                        if (!this.date) return alert('Please choose a date.');
+                        this.bookingResult = {
+                            id: Math.floor(Math.random() * 90000) + 10000,
+                            meetLink: 'meet.google.com/mxc-' + Math.random().toString(36).substring(2,6) + '-yht'
+                        };
+                    },
+                    closeBooking() {
+                        this.openBooking = false;
+                        this.bookingResult = null;
+                        this.date = '';
+                    }
+                }" class="mt-6 bg-gradient-to-br from-teal-50 to-teal-100/40 rounded-3xl p-6 border border-teal-500/10 shadow-sm font-sans">
+                    <div class="flex items-start gap-4">
+                        <div class="p-3 bg-white text-teal-650 rounded-2xl shadow-sm border border-teal-200/30">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-slate-800 text-sm">Pharmacist Advisory Call</h3>
+                            <p class="text-xs text-slate-500 mt-1 leading-relaxed font-medium">Schedule a free 10-minute consultation with a registered clinical pharmacist for medical guidelines.</p>
+                            <button @click="openBooking = true" type="button" class="mt-4 bg-teal-650 hover:bg-teal-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition shadow-md shadow-teal-600/10 active:scale-95">
+                                Book Video Consultation
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Booking Modal -->
+                    <div x-show="openBooking" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+                        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" @click="closeBooking()"></div>
+                        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl relative z-10 border border-slate-200">
+                            <div class="flex justify-between items-center pb-3 border-b border-slate-100 mb-4">
+                                <h4 class="font-extrabold text-slate-800 text-sm">Book Pharmacist Call</h4>
+                                <button type="button" @click="closeBooking()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center font-bold transition">&times;</button>
+                            </div>
+
+                            <!-- Form view -->
+                            <div x-show="!bookingResult" class="space-y-4">
+                                <div>
+                                    <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-sans">Advisory Area</label>
+                                    <select x-model="specialty" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 focus:outline-none focus:border-teal-500 transition">
+                                        <option value="Prescription Clarifications">Prescription Clarifications</option>
+                                        <option value="Alternative Substitution & Dosage">Alternative Substitution & Dosage</option>
+                                        <option value="Side Effects & Contraindications">Side Effects & Contraindications</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-sans">Choose Date</label>
+                                    <input type="date" x-model="date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:border-teal-500 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-sans">Available Time Slots</label>
+                                    <select x-model="slot" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 focus:outline-none focus:border-teal-500 transition">
+                                        <option value="10:00 AM - 10:15 AM">10:00 AM - 10:15 AM</option>
+                                        <option value="11:30 AM - 11:45 AM">11:30 AM - 11:45 AM</option>
+                                        <option value="03:00 PM - 03:15 PM">03:00 PM - 03:15 PM</option>
+                                        <option value="05:30 PM - 05:45 PM">05:30 PM - 05:45 PM</option>
+                                    </select>
+                                </div>
+                                <button @click="submitBooking()" type="button" class="w-full bg-teal-650 hover:bg-teal-700 text-white font-bold text-xs py-3 rounded-xl transition shadow-md shadow-teal-500/10 active:scale-95">
+                                    Confirm Call Appointment
+                                </button>
+                            </div>
+
+                            <!-- Success view -->
+                            <div x-show="bookingResult" class="space-y-4 text-center">
+                                <div class="w-12 h-12 bg-emerald-50 text-emerald-650 rounded-full flex items-center justify-center mx-auto shadow-sm border border-emerald-500/10">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h5 class="font-extrabold text-slate-800 text-sm">Advisory Scheduled!</h5>
+                                    <p class="text-[10px] text-slate-450 mt-1" x-text="'Appointment ID: #PH-' + bookingResult?.id"></p>
+                                </div>
+                                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-150 text-left space-y-1.5 text-xs font-semibold text-slate-700">
+                                    <div><span class="text-slate-400">Date:</span> <span class="text-slate-800" x-text="date"></span></div>
+                                    <div><span class="text-slate-400">Time:</span> <span class="text-slate-800" x-text="slot"></span></div>
+                                    <div><span class="text-slate-400">Topic:</span> <span class="text-slate-800" x-text="specialty"></span></div>
+                                </div>
+                                <div class="text-[10px] bg-teal-50 border border-teal-500/10 text-teal-800 p-2.5 rounded-xl font-bold flex flex-col items-center">
+                                    <span>Google Meet Join Link:</span>
+                                    <a :href="'https://' + bookingResult?.meetLink" target="_blank" class="underline block mt-0.5 text-teal-700" x-text="bookingResult?.meetLink"></a>
+                                </div>
+                                <button @click="closeBooking()" type="button" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-655 font-bold text-xs py-2.5 rounded-xl transition">
+                                    Close Receipt
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
                 <!-- Right: Prescriptions History List (7 Columns) -->
                 <div class="lg:col-span-7 space-y-5">
                     <h2 class="text-lg font-bold text-slate-900 mb-2">My Uploaded Prescriptions</h2>
