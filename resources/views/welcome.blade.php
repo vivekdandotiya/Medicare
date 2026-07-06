@@ -255,6 +255,81 @@
             </div>
         </section>
 
+        <!-- Help Center FAQs Section -->
+        <section x-data="{
+            searchQuery: '',
+            activeFaq: null,
+            faqs: [
+                {
+                    q: 'How do I upload a doctor prescription?',
+                    a: 'Select Upload Prescription inside the Prescription Hub or during Checkout. We accept JPG, PNG, and PDF files under 4MB. Our staff pharmacists review uploads within 15 minutes.'
+                },
+                {
+                    q: 'What are OTC vs. Prescription (Rx) medicines?',
+                    a: 'Over-the-Counter (OTC) items do not require verification. Prescription (Rx) items require a valid practitioner slip uploaded to be processed and successfully dispatched.'
+                },
+                {
+                    q: 'How long does shipping and delivery take?',
+                    a: 'We provide free delivery for orders above ₹500. Standard delivery takes 24 to 48 hours depending on your city zone. Express delivery options are available in select metro regions.'
+                },
+                {
+                    q: 'What is the return and cancellation policy?',
+                    a: 'You can cancel any pending order directly from your Orders log. Once dispatched, return requests for undamaged sealed packs can be submitted within 7 days.'
+                }
+            ],
+            get filteredFaqs() {
+                if (!this.searchQuery.trim()) return this.faqs;
+                const query = this.searchQuery.toLowerCase();
+                return this.faqs.filter(f => f.q.toLowerCase().includes(query) || f.a.toLowerCase().includes(query));
+            }
+        }" class="py-16 bg-white border-t border-slate-100">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 font-sans">
+                <!-- Header -->
+                <div class="text-center mb-10">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-250/20 mb-3 uppercase tracking-wider">
+                        Help & Support
+                    </span>
+                    <h2 class="text-3xl font-black text-slate-800 tracking-tight sm:text-4xl">
+                        Frequently Asked Questions
+                    </h2>
+                    <p class="mt-3 text-slate-550 text-sm font-medium">
+                        Quick answers to help you navigate prescriptions, orders, and delivery schedules.
+                    </p>
+                </div>
+
+                <!-- Instant Search Field -->
+                <div class="relative max-w-lg mx-auto mb-8">
+                    <input type="text" x-model="searchQuery" placeholder="Search questions or keywords..."
+                           class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-10 pr-4 py-3 text-xs placeholder:text-slate-400 focus:bg-white focus:border-teal-500 focus:outline-none transition font-semibold text-slate-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5 text-slate-400 absolute left-3.5 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+
+                <!-- FAQ Accordions -->
+                <div class="space-y-4">
+                    <template x-for="(faq, idx) in filteredFaqs" :key="idx">
+                        <div class="border border-slate-150 rounded-2xl overflow-hidden bg-slate-50/20 transition">
+                            <button @click="activeFaq = (activeFaq === idx ? null : idx)" type="button"
+                                    class="w-full text-left px-5 py-4 flex justify-between items-center font-bold text-slate-800 hover:text-teal-650 transition">
+                                <span x-text="faq.q" class="text-xs sm:text-sm"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5 text-slate-400 transition transform duration-200"
+                                     :class="activeFaq === idx ? 'rotate-180 text-teal-605' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div x-show="activeFaq === idx" x-transition
+                                 class="px-5 pb-4 text-xs sm:text-sm text-slate-650 leading-relaxed font-medium" x-text="faq.a">
+                            </div>
+                        </div>
+                    </template>
+                    <template x-if="filteredFaqs.length === 0">
+                        <p class="text-center text-slate-450 py-8 text-xs font-semibold">No answers matches your search criteria.</p>
+                    </template>
+                </div>
+            </div>
+        </section>
+
         <!-- Wellness & Health Insights Section -->
         <section x-data="{
             activeArticle: null,
