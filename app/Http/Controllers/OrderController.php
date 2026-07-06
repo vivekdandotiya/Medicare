@@ -88,8 +88,12 @@ class OrderController extends Controller
         $subtotal = $cart->subtotal;
         $discount = 0;
         $couponCode = $request->input('coupon_code');
-        if ($couponCode === '123' || $couponCode === '1234') {
+        if ($couponCode === 'HEALTH20') {
+            $discount = $subtotal * 0.20;
+        } elseif ($couponCode === 'MEDICARE10' || $couponCode === '123') {
             $discount = $subtotal * 0.10;
+        } elseif ($couponCode === 'WELCOME50') {
+            $discount = min(50, $subtotal);
         }
 
         $discountedSubtotal = $subtotal - $discount;

@@ -105,11 +105,14 @@
 
                 <!-- Offer Code Section -->
                 <div class="border-t border-slate-100 pt-5 mb-5">
-                    <label class="block text-[10px] font-bold text-slate-450 uppercase tracking-widest mb-2.5">Have a Coupon / Offer Code?</label>
+                    <div class="flex justify-between items-center mb-2.5">
+                        <label class="block text-[10px] font-bold text-slate-450 uppercase tracking-widest">Have a Coupon / Offer Code?</label>
+                        <button type="button" onclick="toggleCouponsModal(true)" class="text-[10px] font-bold text-teal-605 hover:text-teal-800 hover:underline transition">View Available Offers</button>
+                    </div>
                     <div class="flex gap-2">
                         <input type="text" 
                                id="coupon_code_input" 
-                               placeholder="e.g. 123" 
+                               placeholder="e.g. HEALTH20" 
                                class="flex-1 border border-slate-250 rounded-xl px-3.5 py-2 text-xs focus:border-teal-500 focus:ring-teal-500 focus:outline-none uppercase font-bold text-slate-800 placeholder:text-slate-400">
                         <button type="button" 
                                 id="apply_coupon_btn" 
@@ -176,10 +179,37 @@
             
             let appliedCode = '';
             
+            window.toggleCouponsModal = function(show) {
+                const modal = document.getElementById('coupons_modal');
+                if (show) {
+                    modal.classList.remove('hidden');
+                } else {
+                    modal.classList.add('hidden');
+                }
+            };
+
+            window.applyCouponCode = function(code) {
+                if (appliedCode) {
+                    // Remove current code first
+                    applyBtn.click();
+                }
+                couponInput.value = code;
+                toggleCouponsModal(false);
+                applyBtn.click();
+            };
+
             function updatePrices() {
                 let discount = 0;
-                if (appliedCode === '123' || appliedCode === '1234') {
+                let discountText = 'Discount';
+                if (appliedCode === 'HEALTH20') {
+                    discount = subtotal * 0.20;
+                    discountText = 'Discount (20% Off)';
+                } else if (appliedCode === 'MEDICARE10' || appliedCode === '123') {
                     discount = subtotal * 0.10;
+                    discountText = 'Discount (10% Off)';
+                } else if (appliedCode === 'WELCOME50') {
+                    discount = Math.min(50, subtotal);
+                    discountText = 'Discount (Flat ₹50 Off)';
                 }
                 
                 const discountedSubtotal = subtotal - discount;
@@ -190,6 +220,7 @@
                 if (discount > 0) {
                     discountRow.classList.remove('hidden');
                     discountRow.classList.add('flex');
+                    discountRow.querySelector('span:first-child').textContent = discountText;
                     discountAmountEl.textContent = '-₹' + discount.toFixed(2);
                 } else {
                     discountRow.classList.remove('flex');
@@ -222,7 +253,7 @@
                     return;
                 }
                 
-                const enteredCode = couponInput.value.trim();
+                const enteredCode = couponInput.value.trim().toUpperCase();
                 if (!enteredCode) {
                     couponMessage.textContent = 'Please enter a code.';
                     couponMessage.className = 'text-xs mt-2 text-red-650 font-semibold';
@@ -230,14 +261,21 @@
                     return;
                 }
                 
-                if (enteredCode === '123' || enteredCode === '1234') {
+                const validCodes = ['HEALTH20', 'MEDICARE10', 'WELCOME50', '123'];
+                if (validCodes.includes(enteredCode)) {
                     appliedCode = enteredCode;
                     hiddenCouponInput.value = enteredCode;
                     couponInput.disabled = true;
                     applyBtn.textContent = 'Remove';
                     applyBtn.className = 'bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition shadow-md shadow-red-500/10 whitespace-nowrap active:scale-95';
-                    couponMessage.textContent = 'Coupon applied successfully! 10% discount applied.';
-                    couponMessage.className = 'text-xs mt-2 text-emerald-600 font-bold';
+                    
+                    let msg = 'Coupon applied successfully! ';
+                    if (enteredCode === 'HEALTH20') msg += '20% discount applied.';
+                    else if (enteredCode === 'WELCOME50') msg += 'Flat ₹50 discount applied.';
+                    else msg += '10% discount applied.';
+
+                    couponMessage.textContent = msg;
+                    couponMessage.className = 'text-xs mt-2 text-emerald-650 font-bold';
                     couponMessage.classList.remove('hidden');
                     updatePrices();
                 } else {
@@ -248,4 +286,44 @@
             });
         });
     </script>
+
+    <!-- Available Coupons Modal -->
+    <div id="coupons_modal" class="fixed inset-0 z-50 flex items-center justify-center hidden" style="display: none;">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="toggleCouponsModal(false)"></div>
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl relative z-10 border border-slate-200 m-4">
+            <div class="flex justify-between items-center pb-4 border-b border-slate-100 mb-4">
+                <h4 class="font-extrabold text-slate-800 text-sm">Available Pharmacy Coupons</h4>
+                <button type="button" onclick="toggleCouponsModal(false)" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition active:scale-90 font-bold">&times;</button>
+            </div>
+            <div class="space-y-4 max-h-[350px] overflow-y-auto pr-1">
+                <!-- Coupon 1 -->
+                <div class="border border-teal-500/20 bg-teal-50/30 p-4 rounded-2xl flex flex-col gap-2 justify-between">
+                    <div class="flex justify-between items-center">
+                        <span class="bg-teal-100/80 text-teal-850 px-2.5 py-1 rounded text-xs font-black uppercase tracking-wider">HEALTH20</span>
+                        <span class="text-xs font-bold text-teal-700">Save 20%</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 font-medium">Get flat 20% off on all medicine orders. No minimum spend.</p>
+                    <button type="button" onclick="applyCouponCode('HEALTH20')" class="w-full mt-1 bg-teal-650 hover:bg-teal-700 text-white font-bold text-xs py-2 rounded-xl transition active:scale-95">Apply Code</button>
+                </div>
+                <!-- Coupon 2 -->
+                <div class="border border-indigo-500/20 bg-indigo-50/30 p-4 rounded-2xl flex flex-col gap-2 justify-between">
+                    <div class="flex justify-between items-center">
+                        <span class="bg-indigo-100/80 text-indigo-850 px-2.5 py-1 rounded text-xs font-black uppercase tracking-wider">MEDICARE10</span>
+                        <span class="text-xs font-bold text-indigo-705">Save 10%</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 font-medium">Save 10% on your pharmaceutical care orders.</p>
+                    <button type="button" onclick="applyCouponCode('MEDICARE10')" class="w-full mt-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-2 rounded-xl transition active:scale-95">Apply Code</button>
+                </div>
+                <!-- Coupon 3 -->
+                <div class="border border-orange-500/20 bg-orange-50/30 p-4 rounded-2xl flex flex-col gap-2 justify-between">
+                    <div class="flex justify-between items-center">
+                        <span class="bg-orange-100/80 text-orange-850 px-2.5 py-1 rounded text-xs font-black uppercase tracking-wider">WELCOME50</span>
+                        <span class="text-xs font-bold text-orange-700">Flat ₹50 Off</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 font-medium">Flat ₹50 off on your first order over ₹200.</p>
+                    <button type="button" onclick="applyCouponCode('WELCOME50')" class="w-full mt-1 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs py-2 rounded-xl transition active:scale-95">Apply Code</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </x-app-layout>
