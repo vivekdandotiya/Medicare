@@ -279,105 +279,168 @@
                             <span class="text-3xl font-black text-slate-900 block mt-0.5">₹{{ number_format($totalSpent, 2) }}</span>
                         </div>
                     </div>
-                </div>
+                </                <!-- Interactive Dashboard Widgets Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left: Medication Routine Tracker (2 Columns) -->
+                    <div class="lg:col-span-2">
+                        <div x-data="{
+                            newPillName: '',
+                            newPillTime: 'Morning',
+                            pills: [
+                                { id: 1, name: 'Chewable Limcee 500mg', time: 'Afternoon', taken: true, custom: false },
+                                { id: 2, name: 'Amoxyclav 625 Duo', time: 'Morning', taken: false, custom: false },
+                                { id: 3, name: 'Strepsils Lozenge', time: 'Night', taken: true, custom: false }
+                            ],
+                            addPill() {
+                                if (!this.newPillName.trim()) return;
+                                this.pills.push({
+                                    id: Date.now(),
+                                    name: this.newPillName.trim(),
+                                    time: this.newPillTime,
+                                    taken: false,
+                                    custom: true
+                                });
+                                this.newPillName = '';
+                            },
+                            removePill(id) {
+                                this.pills = this.pills.filter(p => p.id !== id);
+                            },
+                            get percentTaken() {
+                                if (this.pills.length === 0) return 0;
+                                const takenCount = this.pills.filter(p => p.taken).length;
+                                return Math.round((takenCount / this.pills.length) * 100);
+                            },
+                            get takenCount() {
+                                return this.pills.filter(p => p.taken).length;
+                            }
+                        }" class="bg-white rounded-3xl p-6 border border-slate-200/50 shadow-sm hover:border-teal-500/10 transition h-full flex flex-col justify-between">
+                            <div>
+                                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                                    <div>
+                                        <h3 class="font-extrabold text-slate-900 text-lg tracking-tight flex items-center gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-650" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                            </svg>
+                                            Medication Intake Tracker
+                                        </h3>
+                                        <p class="text-xs text-slate-550 mt-1 font-medium">Log your daily pill courses and track dosage compliance.</p>
+                                    </div>
+                                    <div class="flex items-center gap-2 bg-slate-50 px-3.5 py-1.5 rounded-xl border border-slate-200/30">
+                                        <span class="text-xs font-bold text-slate-700">Today's Progress:</span>
+                                        <span class="text-xs font-black text-teal-700" x-text="`${takenCount}/${pills.length} taken (${percentTaken}%)`"></span>
+                                    </div>
+                                </div>
 
-                <!-- Medication Routine Tracker Widget -->
-                <div x-data="{
-                    newPillName: '',
-                    newPillTime: 'Morning',
-                    pills: [
-                        { id: 1, name: 'Chewable Limcee 500mg', time: 'Afternoon', taken: true, custom: false },
-                        { id: 2, name: 'Amoxyclav 625 Duo', time: 'Morning', taken: false, custom: false },
-                        { id: 3, name: 'Strepsils Lozenge', time: 'Night', taken: true, custom: false }
-                    ],
-                    addPill() {
-                        if (!this.newPillName.trim()) return;
-                        this.pills.push({
-                            id: Date.now(),
-                            name: this.newPillName.trim(),
-                            time: this.newPillTime,
-                            taken: false,
-                            custom: true
-                        });
-                        this.newPillName = '';
-                    },
-                    removePill(id) {
-                        this.pills = this.pills.filter(p => p.id !== id);
-                    },
-                    get percentTaken() {
-                        if (this.pills.length === 0) return 0;
-                        const takenCount = this.pills.filter(p => p.taken).length;
-                        return Math.round((takenCount / this.pills.length) * 100);
-                    },
-                    get takenCount() {
-                        return this.pills.filter(p => p.taken).length;
-                    }
-                }" class="bg-white rounded-3xl p-6 border border-slate-200/50 shadow-sm hover:border-teal-500/10 transition">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                        <div>
-                            <h3 class="font-extrabold text-slate-900 text-lg tracking-tight flex items-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-650" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                </svg>
-                                Medication Intake Tracker
-                            </h3>
-                            <p class="text-xs text-slate-550 mt-1 font-medium">Log your daily pill courses and track dosage compliance.</p>
-                        </div>
-                        <div class="flex items-center gap-2 bg-slate-50 px-3.5 py-1.5 rounded-xl border border-slate-200/30">
-                            <span class="text-xs font-bold text-slate-700">Today's Progress:</span>
-                            <span class="text-xs font-black text-teal-700" x-text="`${takenCount}/${pills.length} taken (${percentTaken}%)`"></span>
-                        </div>
-                    </div>
+                                <!-- Progress Bar -->
+                                <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden mb-6">
+                                    <div class="h-full bg-teal-500 rounded-full transition-all duration-300" :style="`width: ${percentTaken}%`"></div>
+                                </div>
 
-                    <!-- Progress Bar -->
-                    <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden mb-6">
-                        <div class="h-full bg-teal-500 rounded-full transition-all duration-300" :style="`width: ${percentTaken}%`"></div>
-                    </div>
+                                <!-- Reminders Grid -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- List -->
+                                    <div class="space-y-3">
+                                        <template x-for="pill in pills" :key="pill.id">
+                                            <div class="flex items-center justify-between p-3.5 rounded-2xl border transition"
+                                                 :class="pill.taken ? 'bg-teal-50/20 border-teal-200/50' : 'bg-white border-slate-200/60'">
+                                                <div class="flex items-center gap-3">
+                                                    <input type="checkbox" x-model="pill.taken" class="rounded border-slate-350 text-teal-650 focus:ring-teal-500 h-4.5 w-4.5 cursor-pointer">
+                                                    <div>
+                                                        <span x-text="pill.name" :class="pill.taken ? 'line-through text-slate-455' : 'text-slate-805'" class="text-xs font-bold"></span>
+                                                        <span x-text="pill.time" class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5"></span>
+                                                    </div>
+                                                </div>
+                                                <template x-if="pill.custom">
+                                                    <button @click="removePill(pill.id)" class="text-slate-400 hover:text-red-500 text-xs font-bold px-2 py-1 rounded transition">&times;</button>
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </div>
 
-                    <!-- Reminders Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- List -->
-                        <div class="space-y-3">
-                            <template x-for="pill in pills" :key="pill.id">
-                                <div class="flex items-center justify-between p-3.5 rounded-2xl border transition"
-                                     :class="pill.taken ? 'bg-teal-50/20 border-teal-200/50' : 'bg-white border-slate-200/60'">
-                                    <div class="flex items-center gap-3">
-                                        <input type="checkbox" x-model="pill.taken" class="rounded border-slate-350 text-teal-650 focus:ring-teal-500 h-4.5 w-4.5 cursor-pointer">
-                                        <div>
-                                            <span x-text="pill.name" :class="pill.taken ? 'line-through text-slate-450' : 'text-slate-805'" class="text-xs font-bold"></span>
-                                            <span x-text="pill.time" class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5"></span>
+                                    <!-- Inline Add Reminder Form -->
+                                    <div class="bg-slate-50/55 rounded-2xl p-5 border border-slate-200/40">
+                                        <h4 class="text-[10px] font-extrabold text-slate-450 uppercase tracking-widest mb-4 font-sans">Add Medication Schedule</h4>
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-sans">Medicine Name</label>
+                                                <input type="text" x-model="newPillName" placeholder="e.g. Paracetamol 500mg" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:border-teal-500 transition font-semibold">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-sans">Dosage Time</label>
+                                                <select x-model="newPillTime" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-655 focus:outline-none focus:border-teal-500 transition">
+                                                    <option value="Morning">Morning (After Breakfast)</option>
+                                                    <option value="Afternoon">Afternoon (After Lunch)</option>
+                                                    <option value="Night">Evening / Night (Before Bed)</option>
+                                                </select>
+                                            </div>
+                                            <button @click="addPill" type="button" class="w-full bg-teal-655 hover:bg-teal-700 text-white font-bold text-xs py-3 rounded-xl transition shadow-md shadow-teal-500/10 active:scale-95">
+                                                Add Intake Reminder
+                                            </button>
                                         </div>
                                     </div>
-                                    <template x-if="pill.custom">
-                                        <button @click="removePill(pill.id)" class="text-slate-400 hover:text-red-500 text-xs font-bold px-2 py-1 rounded transition">&times;</button>
-                                    </template>
                                 </div>
-                            </template>
-                        </div>
-
-                        <!-- Inline Add Reminder Form -->
-                        <div class="bg-slate-50/50 rounded-2xl p-5 border border-slate-200/40">
-                            <h4 class="text-[10px] font-extrabold text-slate-450 uppercase tracking-widest mb-4">Add Medication Schedule</h4>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Medicine Name</label>
-                                    <input type="text" x-model="newPillName" placeholder="e.g. Paracetamol 500mg" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:border-teal-500 transition font-semibold">
-                                </div>
-                                <div>
-                                    <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Dosage Time</label>
-                                    <select x-model="newPillTime" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-655 focus:outline-none focus:border-teal-500 transition">
-                                        <option value="Morning">Morning (After Breakfast)</option>
-                                        <option value="Afternoon">Afternoon (After Lunch)</option>
-                                        <option value="Night">Evening / Night (Before Bed)</option>
-                                    </select>
-                                </div>
-                                <button @click="addPill" type="button" class="w-full bg-teal-650 hover:bg-teal-700 text-white font-bold text-xs py-3 rounded-xl transition shadow-md shadow-teal-500/10 active:scale-95">
-                                    Add Intake Reminder
-                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
+
+                    <!-- Right: Medical Profile Completion Circle Widget (1 Column) -->
+                    <div class="lg:col-span-1">
+                        <div x-data="{
+                            items: [
+                                { name: 'Register Phone Number', done: true },
+                                { name: 'Declare Blood Group', done: false },
+                                { name: 'Set Emergency Contact', done: false },
+                                { name: 'Declare Drug Allergies', done: false },
+                                { name: 'Input Clinical Age', done: true }
+                            ],
+                            get percentComplete() {
+                                const completed = this.items.filter(i => i.done).length;
+                                return Math.round((completed / this.items.length) * 100);
+                            }
+                        }" class="bg-white rounded-3xl p-6 border border-slate-200/50 shadow-sm hover:border-teal-500/10 transition h-full flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-extrabold text-slate-900 text-base tracking-tight flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-650" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    Clinical Health Profile
+                                </h3>
+                                <p class="text-[11px] text-slate-450 mt-1 font-medium leading-relaxed">Verify your medical card credentials for quick checkout approvals.</p>
+                            </div>
+
+                            <!-- SVG Circular Progress Wheel -->
+                            <div class="flex justify-center items-center my-6 relative">
+                                <svg viewBox="0 0 36 36" class="w-28 h-28 transform -rotate-90">
+                                    <!-- Background Circle -->
+                                    <path class="text-slate-100" stroke-width="3" stroke="currentColor" fill="none"
+                                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <!-- Animated Completed Segment -->
+                                    <path class="text-teal-500 transition-all duration-500" stroke-width="3" 
+                                          stroke-dasharray="100, 100"
+                                          :stroke-dashoffset="100 - percentComplete"
+                                          stroke-linecap="round"
+                                          stroke="currentColor" fill="none"
+                                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                </svg>
+                                <!-- Percentage text inside the wheel -->
+                                <div class="absolute text-center">
+                                    <span class="text-xl font-black text-slate-800" x-text="`${percentComplete}%`"></span>
+                                    <span class="block text-[8px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">Complete</span>
+                                </div>
+                            </div>
+
+                            <!-- Checklist -->
+                            <div class="space-y-2.5 border-t border-slate-100 pt-4">
+                                <template x-for="(item, idx) in items" :key="idx">
+                                    <label class="flex items-center gap-2.5 cursor-pointer group">
+                                        <input type="checkbox" x-model="item.done" class="rounded border-slate-300 text-teal-650 focus:ring-teal-500 h-4.5 w-4.5 cursor-pointer">
+                                        <span x-text="item.name" :class="item.done ? 'text-slate-400 line-through' : 'text-slate-700'" class="text-xs font-semibold group-hover:text-slate-900 transition"></span>
+                                    </label>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div></div>
 
                 <!-- 2. Search container -->
                 <div class="search-container p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
