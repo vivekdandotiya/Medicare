@@ -42,7 +42,28 @@
         @endif
 
         <!-- Search and Filters Container -->
-        <form action="{{ route('medicines.index') }}" method="GET" x-data="{ maxPrice: {{ request('max_price', 1000) }} }">
+        <form action="{{ route('medicines.index') }}" method="GET" x-data="{
+            maxPrice: {{ request('max_price', 1000) }},
+            compareItems: [],
+            showCompareModal: false,
+            toggleCompare(item) {
+                if (this.isInCompare(item.id)) {
+                    this.compareItems = this.compareItems.filter(i => i.id !== item.id);
+                } else {
+                    if (this.compareItems.length >= 3) {
+                        alert('You can compare a maximum of 3 medicines.');
+                        return;
+                    }
+                    this.compareItems.push(item);
+                }
+            },
+            isInCompare(id) {
+                return this.compareItems.some(i => i.id === id);
+            },
+            clearCompare() {
+                this.compareItems = [];
+            }
+        }">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 
                 <!-- Left Sidebar: Filter controls -->
@@ -253,8 +274,26 @@
                                             <a href="{{ route('login') }}" class="w-full bg-teal-650 hover:bg-teal-700 text-white font-bold text-xs py-2.5 rounded-xl transition text-center block shadow-md shadow-teal-600/10">
                                                 Log in to Buy
                                             </a>
-                                        @endauth
                                     </div>
+
+                                    <!-- Compare Toggle Button -->
+                                    <button type="button" @click="toggleCompare({{ json_encode([
+                                        'id' => $medicine->id,
+                                        'name' => $medicine->name,
+                                        'brand' => $medicine->brand->name,
+                                        'category' => $medicine->category->name,
+                                        'price' => $medicine->selling_price,
+                                        'mrp' => $medicine->mrp,
+                                        'description' => $medicine->description ?? 'No description provided.',
+                                        'rx' => $medicine->prescription_required ? 'Yes' : 'No',
+                                        'image' => $medicine->image
+                                    ]) }})"
+                                            class="w-full mt-3 border border-slate-200 hover:border-teal-500 hover:bg-teal-50/20 text-slate-500 hover:text-teal-655 font-bold text-[11px] py-2 rounded-xl transition flex items-center justify-center gap-1 active:scale-[0.98]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" />
+                                        </svg>
+                                        <span x-text="isInCompare({{ $medicine->id }}) ? 'Added to Compare' : 'Compare Specs'"></span>
+                                    </button>
                                 </div>
                             </div>
                         @empty
@@ -268,5 +307,105 @@
                 </div>
             </div>
         </form>
+
+        <!-- Sticky Bottom Compare Bar -->
+        <div x-show="compareItems.length > 0" class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-2xl py-4 px-6 transition duration-300 font-sans" style="display: none;">
+            <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center -space-x-4">
+                        <template x-for="item in compareItems" :key="item.id">
+                            <div class="w-12 h-12 rounded-full border-2 border-white bg-slate-50 flex items-center justify-center overflow-hidden shadow-md">
+                                <template x-if="item.image">
+                                    <img :src="'/' + item.image" class="w-full h-full object-contain p-1">
+                                </template>
+                                <template x-if="!item.image">
+                                    <span class="text-[9px] font-bold text-teal-700 font-sans" x-text="item.name.substring(0,3)"></span>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                    <div>
+                        <h4 class="font-extrabold text-slate-800 text-xs">Compare Medicines</h4>
+                        <p class="text-[10px] text-slate-400 font-bold block mt-0.5" x-text="`${compareItems.length} of 3 selected`"></p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button type="button" @click="clearCompare()" class="text-xs font-bold text-slate-400 hover:text-slate-655 transition px-3 py-2 rounded-xl">Clear All</button>
+                    <button type="button" @click="showCompareModal = true" class="bg-teal-655 hover:bg-teal-700 text-white font-bold text-xs px-6 py-2.5 rounded-xl transition shadow-md shadow-teal-500/10 active:scale-95">Compare Specs</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Details Modal -->
+        <div x-show="showCompareModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 font-sans" style="display: none;">
+            <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" @click="showCompareModal = false"></div>
+            <div class="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl relative z-10 border border-slate-200">
+                <div class="flex justify-between items-center pb-4 border-b border-slate-100 mb-6">
+                    <h4 class="font-black text-slate-900 text-base">Medicine Comparison Table</h4>
+                    <button type="button" @click="showCompareModal = false" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center font-bold transition">&times;</button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="border-b border-slate-150">
+                                <th class="py-3 font-bold text-slate-400 uppercase tracking-widest min-w-[120px]">Parameters</th>
+                                <template x-for="item in compareItems" :key="item.id">
+                                    <th class="py-3 px-4 font-bold text-slate-800 text-sm max-w-[200px]" x-text="item.name"></th>
+                                </template>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <!-- Manufacturer -->
+                            <tr>
+                                <td class="py-3 font-bold text-slate-500 uppercase tracking-wider">Manufacturer / Brand</td>
+                                <template x-for="item in compareItems" :key="item.id">
+                                    <td class="py-3 px-4 font-semibold text-slate-700" x-text="item.brand"></td>
+                                </template>
+                            </tr>
+                            <!-- Category -->
+                            <tr>
+                                <td class="py-3 font-bold text-slate-500 uppercase tracking-wider">Health Category</td>
+                                <template x-for="item in compareItems" :key="item.id">
+                                    <td class="py-3 px-4 font-semibold text-slate-700" x-text="item.category"></td>
+                                </template>
+                            </tr>
+                            <!-- Selling Price -->
+                            <tr>
+                                <td class="py-3 font-bold text-slate-500 uppercase tracking-wider">Selling Price</td>
+                                <template x-for="item in compareItems" :key="item.id">
+                                    <td class="py-3 px-4 font-extrabold text-teal-700 text-sm" x-text="`₹${item.price.toFixed(2)}`"></td>
+                                </template>
+                            </tr>
+                            <!-- MRP -->
+                            <tr>
+                                <td class="py-3 font-bold text-slate-500 uppercase tracking-wider">MRP Price</td>
+                                <template x-for="item in compareItems" :key="item.id">
+                                    <td class="py-3 px-4 font-semibold text-slate-400 line-through" x-text="`₹${item.mrp.toFixed(2)}`"></td>
+                                </template>
+                            </tr>
+                            <!-- Rx Required -->
+                            <tr>
+                                <td class="py-3 font-bold text-slate-500 uppercase tracking-wider">Rx Required</td>
+                                <template x-for="item in compareItems" :key="item.id">
+                                    <td class="py-3 px-4">
+                                        <span :class="item.rx === 'Yes' ? 'bg-red-50 text-red-650' : 'bg-emerald-50 text-emerald-650'"
+                                              class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider"
+                                              x-text="item.rx"></span>
+                                    </td>
+                                </template>
+                            </tr>
+                            <!-- Description -->
+                            <tr>
+                                <td class="py-3 font-bold text-slate-500 uppercase tracking-wider">Details</td>
+                                <template x-for="item in compareItems" :key="item.id">
+                                    <td class="py-3 px-4 font-medium text-slate-505 leading-relaxed max-w-[220px]" x-text="item.description"></td>
+                                </template>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </x-app-layout>
