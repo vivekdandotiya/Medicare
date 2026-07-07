@@ -171,15 +171,15 @@
                                 </span>
                             @endif
                             @if(request('category'))
-                                @php $catName = $categories->find(request('category'))?%3F->name; @endphp
+                                @php $catName = $categories->find(request('category'))?->name; @endphp
                                 @if($catName)
                                     <span class="inline-flex items-center gap-1 bg-teal-50 border border-teal-200/50 text-teal-700 text-[10px] font-bold px-2.5 py-1 rounded-md">
                                         Category: {{ $catName }}
                                     </span>
-                                @endif
+                                  @endif
                             @endif
                             @if(request('brand'))
-                                @php $brandName = $brands->find(request('brand'))?%3F->name; @endphp
+                                @php $brandName = $brands->find(request('brand'))?->name; @endphp
                                 @if($brandName)
                                     <span class="inline-flex items-center gap-1 bg-teal-50 border border-teal-200/50 text-teal-700 text-[10px] font-bold px-2.5 py-1 rounded-md">
                                         Brand: {{ $brandName }}
