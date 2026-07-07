@@ -301,7 +301,7 @@
                 <div class="relative max-w-lg mx-auto mb-8">
                     <input type="text" x-model="searchQuery" placeholder="Search questions or keywords..."
                            class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-10 pr-4 py-3 text-xs placeholder:text-slate-400 focus:bg-white focus:border-teal-500 focus:outline-none transition font-semibold text-slate-800">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5 text-slate-400 absolute left-3.5 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 absolute left-3.5 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </div>
@@ -311,9 +311,9 @@
                     <template x-for="(faq, idx) in filteredFaqs" :key="idx">
                         <div class="border border-slate-150 rounded-2xl overflow-hidden bg-slate-50/20 transition">
                             <button @click="activeFaq = (activeFaq === idx ? null : idx)" type="button"
-                                    class="w-full text-left px-5 py-4 flex justify-between items-center font-bold text-slate-800 hover:text-teal-650 transition">
+                                    class="w-full text-left px-5 py-4 flex justify-between items-center font-bold text-slate-800 hover:text-teal-650 transition gap-4">
                                 <span x-text="faq.q" class="text-xs sm:text-sm"></span>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5 text-slate-400 transition transform duration-200"
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 transition transform duration-200 shrink-0"
                                      :class="activeFaq === idx ? 'rotate-180 text-teal-605' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
                                 </svg>

@@ -344,7 +344,7 @@
                                             <div class="flex items-center justify-between p-3.5 rounded-2xl border transition"
                                                  :class="pill.taken ? 'bg-teal-50/20 border-teal-200/50' : 'bg-white border-slate-200/60'">
                                                 <div class="flex items-center gap-3">
-                                                    <input type="checkbox" x-model="pill.taken" class="rounded border-slate-350 text-teal-650 focus:ring-teal-500 h-4.5 w-4.5 cursor-pointer">
+                                                    <input type="checkbox" x-model="pill.taken" class="rounded border-slate-350 text-teal-650 focus:ring-teal-500 h-5 w-5 cursor-pointer">
                                                     <div>
                                                         <span x-text="pill.name" :class="pill.taken ? 'line-through text-slate-455' : 'text-slate-805'" class="text-xs font-bold"></span>
                                                         <span x-text="pill.time" class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5"></span>
@@ -433,7 +433,7 @@
                             <div class="space-y-2.5 border-t border-slate-100 pt-4">
                                 <template x-for="(item, idx) in items" :key="idx">
                                     <label class="flex items-center gap-2.5 cursor-pointer group">
-                                        <input type="checkbox" x-model="item.done" class="rounded border-slate-300 text-teal-650 focus:ring-teal-500 h-4.5 w-4.5 cursor-pointer">
+                                        <input type="checkbox" x-model="item.done" class="rounded border-slate-300 text-teal-650 focus:ring-teal-500 h-5 w-5 cursor-pointer">
                                         <span x-text="item.name" :class="item.done ? 'text-slate-400 line-through' : 'text-slate-700'" class="text-xs font-semibold group-hover:text-slate-900 transition"></span>
                                     </label>
                                 </template>
