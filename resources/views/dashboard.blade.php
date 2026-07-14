@@ -279,7 +279,9 @@
                             <span class="text-3xl font-black text-slate-900 block mt-0.5">₹{{ number_format($totalSpent, 2) }}</span>
                         </div>
                     </div>
-                </                <!-- Interactive Dashboard Widgets Grid -->
+                </div>
+
+                <!-- Interactive Dashboard Widgets Grid -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <!-- Left: Medication Routine Tracker (2 Columns) -->
                     <div class="lg:col-span-2">
@@ -440,7 +442,7 @@
                             </div>
                         </div>
                     </div>
-                </div></div>
+                </div>
 
                 <!-- 2. Search container -->
                 <div class="search-container p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
