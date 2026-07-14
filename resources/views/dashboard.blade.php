@@ -440,6 +440,25 @@
                                     </label>
                                 </template>
                             </div>
+
+                            <!-- Dynamic Health Insight Box -->
+                            <div class="mt-4 pt-3.5 border-t border-slate-100">
+                                <div class="p-3 rounded-2xl bg-teal-50/20 border border-teal-500/10">
+                                    <h5 class="text-[9px] font-black uppercase tracking-wider text-teal-700 mb-1 flex items-center gap-1.5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Wellness Insight
+                                    </h5>
+                                    <p class="text-[10px] text-slate-550 font-medium leading-relaxed"
+                                       x-text="percentComplete < 50 
+                                               ? '⚠️ Fill in emergency contact and allergy records to speed up pharmacist approval workflows.' 
+                                               : (percentComplete < 80 
+                                                  ? '💡 Good start! Add emergency contacts to keep clinical records up to date.' 
+                                                  : '✨ Profile complete! Your comprehensive records ensure faster prescription checkouts.')">
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
