@@ -274,8 +274,41 @@
             </div>
 
                 <!-- Right: Prescriptions History List (7 Columns) -->
-                <div class="lg:col-span-7 space-y-5">
-                    <h2 class="text-lg font-bold text-slate-900 mb-2">My Uploaded Prescriptions</h2>
+                <div class="lg:col-span-7 space-y-5" x-data="{
+                    activeFilter: 'all',
+                    searchQuery: '',
+                    matchesFilter(status) {
+                        if (this.activeFilter === 'all') return true;
+                        return this.activeFilter === status;
+                    },
+                    matchesSearch(title, patient, doctor) {
+                        if (!this.searchQuery.trim()) return true;
+                        const q = this.searchQuery.toLowerCase();
+                        return (title || '').toLowerCase().includes(q) ||
+                               (patient || '').toLowerCase().includes(q) ||
+                               (doctor || '').toLowerCase().includes(q);
+                    }
+                }">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
+                        <h2 class="text-lg font-bold text-slate-900">My Uploaded Prescriptions</h2>
+                        
+                        <!-- Search Bar -->
+                        <div class="relative w-full sm:w-64">
+                            <input type="text" x-model="searchQuery" placeholder="Search prescriptions..."
+                                   class="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2 text-xs focus:border-teal-500 focus:outline-none transition font-semibold text-slate-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute left-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Filter Tabs -->
+                    <div class="flex flex-wrap gap-2 border-b border-slate-100 pb-3">
+                        <button @click="activeFilter = 'all'" :class="activeFilter === 'all' ? 'bg-teal-650 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="text-[10px] font-black px-3.5 py-1.5 rounded-lg transition">All</button>
+                        <button @click="activeFilter = 'pending'" :class="activeFilter === 'pending' ? 'bg-amber-500 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="text-[10px] font-black px-3.5 py-1.5 rounded-lg transition">Pending</button>
+                        <button @click="activeFilter = 'approved'" :class="activeFilter === 'approved' ? 'bg-emerald-650 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="text-[10px] font-black px-3.5 py-1.5 rounded-lg transition">Approved</button>
+                        <button @click="activeFilter = 'rejected'" :class="activeFilter === 'rejected' ? 'bg-red-500 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="text-[10px] font-black px-3.5 py-1.5 rounded-lg transition">Rejected</button>
+                    </div>
 
                     @if($prescriptions->isEmpty())
                         <div class="bg-white border border-slate-200/50 rounded-3xl p-8 text-center text-slate-450 shadow-sm">
@@ -285,7 +318,9 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             @foreach($prescriptions as $prescription)
                                 <div class="bg-white border border-slate-200/50 rounded-3xl p-5 shadow-sm space-y-4 hover:border-teal-500/15 hover:shadow-md transition duration-300 flex flex-col justify-between
-                                            {{ $prescription->status === 'pending' ? 'border-l-4 border-l-amber-500' : ($prescription->status === 'approved' ? 'border-l-4 border-l-emerald-500' : 'border-l-4 border-l-red-500') }}">
+                                            {{ $prescription->status === 'pending' ? 'border-l-4 border-l-amber-500' : ($prescription->status === 'approved' ? 'border-l-4 border-l-emerald-500' : 'border-l-4 border-l-red-500') }}"
+                                     x-show="matchesFilter('{{ $prescription->status }}') && matchesSearch('{{ addslashes($prescription->title) }}', '{{ addslashes($prescription->patient_name) }}', '{{ addslashes($prescription->doctor_name ?? '') }}')"
+                                     x-transition>
                                     <div class="space-y-4">
                                         <div class="flex justify-between items-start gap-3">
                                             <div class="flex items-center gap-3">
