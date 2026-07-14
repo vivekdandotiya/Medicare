@@ -282,66 +282,78 @@
                             <p class="text-sm font-medium">No prescriptions uploaded yet. Submit your first prescription using the form on the left.</p>
                         </div>
                     @else
-                        @foreach($prescriptions as $prescription)
-                            <div class="bg-white border border-slate-200/50 rounded-3xl p-6 shadow-sm space-y-4 hover:border-teal-500/10 transition duration-300">
-                                <div class="flex justify-between items-start gap-4">
-                                    <div>
-                                        <h3 class="font-bold text-slate-900 text-base leading-tight">{{ $prescription->title }}</h3>
-                                        <span class="text-[10px] text-slate-400 font-bold block mt-1.5">Uploaded: {{ $prescription->created_at->format('M d, Y, h:i A') }}</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            @foreach($prescriptions as $prescription)
+                                <div class="bg-white border border-slate-200/50 rounded-3xl p-5 shadow-sm space-y-4 hover:border-teal-500/15 hover:shadow-md transition duration-300 flex flex-col justify-between
+                                            {{ $prescription->status === 'pending' ? 'border-l-4 border-l-amber-500' : ($prescription->status === 'approved' ? 'border-l-4 border-l-emerald-500' : 'border-l-4 border-l-red-500') }}">
+                                    <div class="space-y-4">
+                                        <div class="flex justify-between items-start gap-3">
+                                            <div class="flex items-center gap-3">
+                                                <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-400 shrink-0">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-650" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                    </svg>
+                                                </div>
+                                                <div class="min-w-0">
+                                                    <h3 class="font-bold text-slate-900 text-sm truncate leading-tight" title="{{ $prescription->title }}">{{ $prescription->title }}</h3>
+                                                    <span class="text-[9px] text-slate-400 font-bold block mt-1">Uploaded: {{ $prescription->created_at->format('M d, Y') }}</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Status Badge -->
+                                            <div class="shrink-0">
+                                                @if($prescription->status === 'pending')
+                                                    <span class="bg-amber-500/10 text-amber-700 text-[8px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider border border-amber-550/10">Pending</span>
+                                                @elseif($prescription->status === 'approved')
+                                                    <span class="bg-emerald-500/10 text-emerald-700 text-[8px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-550/10">Approved</span>
+                                                @else
+                                                    <span class="bg-red-500/10 text-red-700 text-[8px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider border border-red-550/10">Rejected</span>
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-2 gap-3 text-[11px] border-t border-slate-100 pt-3 text-slate-655 font-medium">
+                                            <div>
+                                                <span class="text-slate-400 block font-extrabold text-[8px] uppercase tracking-wider">Patient Name</span>
+                                                <span class="text-slate-800 font-bold truncate block">{{ $prescription->patient_name }}</span>
+                                            </div>
+                                            <div>
+                                                <span class="text-slate-400 block font-extrabold text-[8px] uppercase tracking-wider">Doctor Name</span>
+                                                <span class="text-slate-800 font-bold truncate block">{{ $prescription->doctor_name ?? 'Not Stated' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Review Notes -->
+                                        @if($prescription->notes)
+                                            <div class="p-3 bg-slate-50 border border-slate-200/40 rounded-xl text-[10px] leading-relaxed text-slate-550 font-medium">
+                                                <span class="font-extrabold text-slate-700 block mb-0.5">Pharmacist Review Feedback:</span>
+                                                {{ $prescription->notes }}
+                                            </div>
+                                        @endif
                                     </div>
 
-                                    <!-- Status Badge -->
-                                    <div>
-                                        @if($prescription->status === 'pending')
-                                            <span class="bg-amber-500/10 text-amber-700 text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-amber-500/5">Pending Review</span>
-                                        @elseif($prescription->status === 'approved')
-                                            <span class="bg-emerald-500/10 text-emerald-700 text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-emerald-500/5">Approved</span>
-                                        @else
-                                            <span class="bg-red-500/10 text-red-705 text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-red-500/5">Rejected</span>
+                                    <div class="flex justify-between items-center border-t border-slate-100 pt-3.5 mt-4">
+                                        <a href="{{ asset($prescription->file_path) }}" target="_blank" class="text-[10px] font-black text-teal-650 hover:text-teal-800 transition flex items-center gap-1.5 bg-teal-50 hover:bg-teal-100 border border-teal-500/10 px-3 py-1.5 rounded-lg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+                                            View File
+                                        </a>
+
+                                        @if($prescription->status !== 'approved')
+                                            <form action="{{ route('prescriptions.destroy', $prescription) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this prescription?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-[10px] font-bold text-red-650 hover:text-red-800 transition px-2 py-1 hover:bg-red-50 rounded-lg">
+                                                    Delete Record
+                                                </button>
+                                            </form>
                                         @endif
                                     </div>
                                 </div>
-
-                                <div class="grid grid-cols-2 gap-4 text-xs border-t border-slate-100 pt-3 text-slate-700 font-medium">
-                                    <div>
-                                        <span class="text-slate-400 block font-bold text-[9px] uppercase tracking-widest">Patient Name</span>
-                                        <span class="text-slate-800 font-semibold">{{ $prescription->patient_name }}</span>
-                                    </div>
-                                    <div>
-                                        <span class="text-slate-400 block font-bold text-[9px] uppercase tracking-widest">Doctor Name</span>
-                                        <span class="text-slate-800 font-semibold">{{ $prescription->doctor_name ?? 'N/A' }}</span>
-                                    </div>
-                                </div>
-
-                                <!-- Review Notes -->
-                                @if($prescription->notes)
-                                    <div class="p-4 bg-slate-50 border border-slate-200/50 rounded-2xl text-xs">
-                                        <span class="font-bold text-slate-800 block mb-1">Pharmacist Review Feedback:</span>
-                                        <span class="text-slate-500 font-medium leading-relaxed">{{ $prescription->notes }}</span>
-                                    </div>
-                                @endif
-
-                                <div class="flex justify-between items-center border-t border-slate-100 pt-4">
-                                    <a href="{{ asset($prescription->file_path) }}" target="_blank" class="text-xs font-bold text-teal-655 hover:text-teal-850 transition flex items-center gap-1.5 bg-teal-50 border border-teal-500/10 px-3.5 py-2 rounded-xl">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                        View Uploaded File
-                                    </a>
-
-                                    @if($prescription->status !== 'approved')
-                                        <form action="{{ route('prescriptions.destroy', $prescription) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this prescription?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-xs font-bold text-red-650 hover:text-red-800 transition px-3 py-2 rounded-xl hover:bg-red-50">
-                                                Delete
-                                            </button>
-                                        </form>
-                                    @endif
-                                </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
 
                         <div class="mt-6">
                             {{ $prescriptions->links() }}
