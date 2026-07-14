@@ -181,6 +181,31 @@
                                         <span class="text-[10px] text-slate-400 mt-0.5 font-medium">At your doorstep</span>
                                     </div>
                                 </div>
+
+                                <!-- Dynamic Status Description Banner -->
+                                <div class="mt-6 border-t border-slate-200/50 pt-4">
+                                    @if($order->status === 'pending')
+                                        <div class="flex items-center gap-2.5 text-slate-650 bg-white/60 p-3.5 rounded-xl border border-slate-200/35 text-[11px] font-semibold">
+                                            <span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse shrink-0"></span>
+                                            <span>We have received your payment. An authorized healthcare supervisor will verify prescription prerequisites shortly.</span>
+                                        </div>
+                                    @elseif($order->status === 'processing')
+                                        <div class="flex items-center gap-2.5 text-slate-650 bg-teal-50/30 p-3.5 rounded-xl border border-teal-500/10 text-[11px] font-semibold">
+                                            <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse shrink-0"></span>
+                                            <span>Registered clinical pharmacists are packaging your items securely under strict hygienic guidelines.</span>
+                                        </div>
+                                    @elseif($order->status === 'shipped')
+                                        <div class="flex items-center gap-2.5 text-slate-650 bg-indigo-50/30 p-3.5 rounded-xl border border-indigo-550/10 text-[11px] font-semibold">
+                                            <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse shrink-0"></span>
+                                            <span>Handed over to Delhivery Express Courier. Track shipment with ID <span class="font-bold text-indigo-750">#DL-{{ 100000 + $order->id }}-IN</span>. Expected Delivery: within 24 hours.</span>
+                                        </div>
+                                    @elseif($order->status === 'delivered')
+                                        <div class="flex items-center gap-2.5 text-slate-650 bg-emerald-50/30 p-3.5 rounded-xl border border-emerald-555/10 text-[11px] font-semibold">
+                                            <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                                            <span>Package successfully handed over to recipient. Thank you for booking your medicine order through Medicare.</span>
+                                        </div>
+                                    @endif
+                                </div>
                             @endif
                         </div>
 
